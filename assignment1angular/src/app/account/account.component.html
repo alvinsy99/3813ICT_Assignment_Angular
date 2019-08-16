@@ -1,0 +1,16 @@
+<h1>Account Page</h1>
+
+<h2>Email: {{ data.email }}</h2>
+
+<h2 *ngIf="data.type == 0">Type: Super Admin</h2>
+
+<h2 *ngIf="data.type == 1">Type: Group Admin</h2>
+<h2 *ngIf="data.type == 2">Type: User</h2>
+
+<a *ngIf="data.type == 0" routerLink="/register">Create a New User</a>
+
+<hr />
+
+<a *ngIf="data.type == 0" routerLink="/remove_user">Remove a User</a>
+
+<a *ngIf="data.type == 1" routerLink="/register">Create a New User</a>

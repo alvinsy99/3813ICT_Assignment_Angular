@@ -1,0 +1,11 @@
+<h1>List of Users:</h1>
+
+<ul>
+  <li *ngFor="let user of users">
+    {{ user.email }}
+    <br />
+    <button (click)="removeUser(user.email, user.type)">
+      Remove {{ user.email }}
+    </button>
+  </li>
+</ul>
