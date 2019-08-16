@@ -11,6 +11,7 @@ import { LoginServiceService } from "../services/login-service.service";
 export class LoginComponent implements OnInit {
   email = "";
   password = "";
+  title = "Login";
 
   constructor(
     private router: Router,
@@ -25,9 +26,11 @@ export class LoginComponent implements OnInit {
 
     this.loginService.logIn(this.email, this.password).subscribe(data => {
       var dataJSON = JSON.stringify(data);
+      var dataEmailJSON = JSON.stringify(data.email);
 
       if (data.valid == true) {
         sessionStorage.setItem("sessionUser", dataJSON);
+        localStorage.setItem("localUser", dataEmailJSON);
         this.router.navigateByUrl("/account");
       } else {
         alert("Invalid username or password");

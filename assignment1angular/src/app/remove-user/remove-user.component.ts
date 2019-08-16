@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginServiceService } from "../services/login-service.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { type } from "os";
 
 @Component({
   selector: "app-remove-user",

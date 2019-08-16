@@ -30,6 +30,7 @@ export class AppComponent {
   logOut() {
     if (typeof Storage !== "undefined") {
       sessionStorage.clear();
+      localStorage.clear();
       this.router.navigateByUrl("/login");
     }
   }

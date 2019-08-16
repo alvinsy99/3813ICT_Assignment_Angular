@@ -91,6 +91,7 @@ module.exports = function(app, path) {
 
   app.post("/api/delete", function(req, res) {
     data = false;
+    console.log(valid_user.length);
     console.log(req.body.email);
     if (req.body.type !== 0 && req.body.type !== 1) {
       var user_index = valid_user
@@ -99,8 +100,10 @@ module.exports = function(app, path) {
         })
         .indexOf(req.body.email);
       console.log(user_index);
-      delete valid_user[user_index];
+      // delete valid_user[user_index];
+      valid_user.splice(user_index, 1);
       console.log(valid_user);
+      console.log(valid_user.length);
       data = true;
     }
 
