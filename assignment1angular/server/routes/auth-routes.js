@@ -67,32 +67,54 @@ module.exports = function(app, path) {
       return res.sendStatus(400);
     }
     var customer = {};
+
     customer.email = "";
     customer.password = "";
     customer.type = 2;
     customer.valid = false;
-    for (let i = 0; i < valid_user.length; i++) {
-      if (req.body.email == valid_user[i].email) {
-        customer.valid = false;
-        break;
-      } else {
-        customer.valid = "";
-        customer.email = req.body.email;
-        customer.password = req.body.password;
-        customer.type = 2;
-        valid_user.push(customer);
-        break;
-      }
+
+    console.log(req.body.email);
+    // for (let i = 0; i < valid_user.length; i++) {
+    //   if (req.body.email !== valid_user[i].email) {
+    //     customer.valid = "";
+    //     customer.email = req.body.email;
+    //     customer.password = req.body.password;
+    //     customer.type = 2;
+    //     valid_user.push(customer);
+    //     break;
+    //   } else {
+    //     customer.valid = false;
+    //     res.send(customer);
+    //     console.log(customer.valid + "from here");
+    //   }
+    // }
+
+    var exist_user = valid_user
+      .map(function(data) {
+        return data.email;
+      })
+      .indexOf(req.body.email);
+
+    console.log(exist_user);
+    if (exist_user >= 1) {
+      customer.valid = false;
+    } else {
+      customer.valid = "";
+      customer.email = req.body.email;
+      customer.password = req.body.password;
+      customer.type = 2;
+      valid_user.push(customer);
     }
 
     res.send(customer);
+    console.log(customer.valid + "customer valid");
     console.log(valid_user);
   });
 
   app.post("/api/delete", function(req, res) {
     data = false;
     console.log(valid_user.length);
-    console.log(req.body.email);
+
     if (req.body.type !== 0 && req.body.type !== 1) {
       var user_index = valid_user
         .map(function(data) {

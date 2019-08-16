@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginServiceService } from "../services/login-service.service";
+import { saveAs } from "file-saver";
 
 @Component({
   selector: "app-register",
@@ -36,5 +37,9 @@ export class RegisterComponent implements OnInit {
           alert("Email has been registered!!!");
         }
       });
+
+    // this.loginService.retrieveUser().subscribe(data => {
+    //   saveAs(JSON.stringify(data), "valid_users.json");
+    // });
   }
 }
