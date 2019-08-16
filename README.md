@@ -23,7 +23,7 @@ In the assignment, there are 5 components at the moment (app, login, account, re
 + server.js server: it contains the hard-code user array with 3 functions (logIn, createUser and removeUser) which will be called by the components.
 
 ## State changes
-From client to server: Mainly the variable is passed to the server are email. The way it happens is that in angular html, I defined [(ngModel]) in order to bind the variable with an client's input and then declare it in the component. With that, I will be able to use the variable in the component to subscribe to a service and pass to the server.js
---
-From server to client: When calling a function in server, the code will create an object which is empty so that after processing the function, it will be attach a attribute called "valid" boolean to indicate whether the function is completed or failed. Along with that, the server can re-send that object to component in which component can subscribe to the service and retrieve the object for further interaction.
+**From client to server**: Mainly the variable is passed to the server are email. The way it happens is that in angular html, I defined [(ngModel]) in order to bind the variable with an client's input and then declare it in the component. With that, I will be able to use the variable in the component to subscribe to a service and pass to the server.js
+
+**From server to client**: When calling a function in server, the code will create an object which is empty so that after processing the function, it will be attach a attribute called "valid" boolean to indicate whether the function is completed or failed. Along with that, the server can re-send that object to component in which component can subscribe to the service and retrieve the object for further interaction.
 
