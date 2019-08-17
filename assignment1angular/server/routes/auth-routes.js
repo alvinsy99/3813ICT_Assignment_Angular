@@ -1,33 +1,8 @@
-module.exports = function(app, path) {
-  valid_user = [
-    {
-      email: "a-user@mail.com",
-      password: "123a",
-      type: 0,
-      valid: ""
-    },
-    {
-      email: "b-user@mail.com",
-      password: "123b",
-      type: 1,
-      valid: ""
-    },
-    {
-      email: "c-user@mail.com",
-      password: "123c",
-      type: 2,
-      valid: ""
-    },
-    {
-      email: "d-user@mail.com",
-      password: "123d",
-      type: 2,
-      valid: ""
-    }
-  ];
+var server = require("../server.js");
 
+module.exports = function(app, path) {
   app.get("/getusers", function(req, res) {
-    res.send(valid_user);
+    res.send(server.valid_user);
   });
 
   app.post("/api/auth", function(req, res) {
@@ -47,15 +22,15 @@ module.exports = function(app, path) {
 
     console.log(req.body.email);
 
-    for (let i = 0; i < valid_user.length; i++) {
+    for (let i = 0; i < server.valid_user.length; i++) {
       if (
-        req.body.email == valid_user[i].email &&
-        req.body.password == valid_user[i].password
+        req.body.email == server.valid_user[i].email &&
+        req.body.password == server.valid_user[i].password
       ) {
         customer.valid = true;
-        customer.email = valid_user[i].email;
-        customer.password = valid_user[i].password;
-        customer.type = valid_user[i].type;
+        customer.email = server.valid_user[i].email;
+        customer.password = server.valid_user[i].password;
+        customer.type = server.valid_user[i].type;
       }
     }
 
@@ -89,43 +64,43 @@ module.exports = function(app, path) {
     //   }
     // }
 
-    var exist_user = valid_user
+    var exist_user = server.valid_user
       .map(function(data) {
         return data.email;
       })
       .indexOf(req.body.email);
 
     console.log(exist_user);
-    if (exist_user >= 1) {
-      customer.valid = false;
-    } else {
+    if (exist_user == -1) {
       customer.valid = "";
       customer.email = req.body.email;
       customer.password = req.body.password;
       customer.type = 2;
-      valid_user.push(customer);
+      server.valid_user.push(customer);
+    } else {
+      customer.valid = false;
     }
 
     res.send(customer);
     console.log(customer.valid + "customer valid");
-    console.log(valid_user);
+    console.log(server.valid_user);
   });
 
   app.post("/api/delete", function(req, res) {
     data = false;
-    console.log(valid_user.length);
+    console.log(server.valid_user.length);
 
     if (req.body.type !== 0 && req.body.type !== 1) {
-      var user_index = valid_user
+      var user_index = server.valid_user
         .map(function(data) {
           return data.email;
         })
         .indexOf(req.body.email);
       console.log(user_index);
       // delete valid_user[user_index];
-      valid_user.splice(user_index, 1);
-      console.log(valid_user);
-      console.log(valid_user.length);
+      server.valid_user.splice(user_index, 1);
+      console.log(server.valid_user);
+      console.log(server.valid_user.length);
       data = true;
     }
 

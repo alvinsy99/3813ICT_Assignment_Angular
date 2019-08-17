@@ -1,0 +1,64 @@
+<h1>Create Group Page</h1>
+
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <form>
+      <input
+        type="text"
+        id="login"
+        class="fadeIn second"
+        name="groupname"
+        placeholder="Create new Group"
+        [(ngModel)]="groupname"
+        autofocus
+        required
+      />
+
+      <input
+        type="submit"
+        class="fadeIn fourth"
+        value="Create Group"
+        (click)="createGroup()"
+      />
+    </form>
+  </div>
+</div>
+
+<h2>List of Groups and Members</h2>
+
+<ul>
+  <li *ngFor="let group of groups">
+    {{ group.group_name }}
+
+    <button (click)="removeGroup(group.group_name)">
+      Remove {{ group.group_name }} group
+    </button>
+    <ol>
+      <li *ngFor="let member of group.members">
+        {{ member }}
+        <button (click)="removeMember(member, group.group_name)">
+          Remove {{ member }}
+        </button>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<p>
+  Add
+  <select name="user" [(ngModel)]="selectedEmail">
+    <option *ngFor="let user of users" [value]="user.email">{{
+      user.email
+    }}</option>
+  </select>
+  to
+  <select name="groupname" [(ngModel)]="selectedGroup">
+    <option *ngFor="let group of groups" [value]="group.group_name">{{
+      group.group_name
+    }}</option>
+  </select>
+  <button (click)="addMember()">Add</button>
+</p>
+<p></p>

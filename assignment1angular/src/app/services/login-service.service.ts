@@ -39,4 +39,35 @@ export class LoginServiceService {
       type: type
     });
   }
+
+  getGroups() {
+    return this.http.get<any>(this.backend + "/groups");
+  }
+
+  createGroups(email: string, groupname: string) {
+    return this.http.post<any>(this.backend + "/groups", {
+      email: email,
+      groupname: groupname
+    });
+  }
+
+  addMember(email: string, groupname: string) {
+    return this.http.post<any>(this.backend + "/addmember", {
+      email: email,
+      groupname: groupname
+    });
+  }
+
+  removeGroup(groupname: string) {
+    return this.http.post<any>(this.backend + "/removegroup", {
+      groupname: groupname
+    });
+  }
+
+  removeMember(membername: string, groupname: string) {
+    return this.http.post<any>(this.backend + "/removemember", {
+      membername: membername,
+      groupname: groupname
+    });
+  }
 }

@@ -10,9 +10,10 @@ import { LoginComponent } from './login/login.component';
 import { AccountComponent } from './account/account.component';
 import { RegisterComponent } from './register/register.component';
 import { RemoveUserComponent } from './remove-user/remove-user.component';
+import { GroupComponent } from './group/group.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, AccountComponent, RegisterComponent, RemoveUserComponent],
+  declarations: [AppComponent, LoginComponent, AccountComponent, RegisterComponent, RemoveUserComponent, GroupComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

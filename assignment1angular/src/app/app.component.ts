@@ -19,7 +19,7 @@ export class AppComponent {
   }
 
   checkProfile() {
-    console.log(this.data);
+    console.log("app component" + this.data);
     if (sessionStorage.getItem("sessionUser") === null) {
       this.router.navigateByUrl("/login");
     } else {
