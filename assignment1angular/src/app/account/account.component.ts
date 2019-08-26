@@ -6,13 +6,13 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./account.component.css"]
 })
 export class AccountComponent implements OnInit {
-  protected data;
+  protected user;
 
   constructor() {}
 
   ngOnInit() {
     if (typeof Storage !== "undefined") {
-      this.data = JSON.parse(sessionStorage.getItem("sessionUser"));
+      this.user = JSON.parse(sessionStorage.getItem("sessionUser"));
     }
   }
 }

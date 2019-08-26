@@ -10,11 +10,13 @@ import { HttpErrorResponse } from "@angular/common/http";
 })
 export class GroupComponent implements OnInit {
   groupname = "";
-  email = JSON.parse(sessionStorage.getItem("sessionUser")).email;
+  assist1 = "";
+  assist2 = "";
+  session = JSON.parse(sessionStorage.getItem("sessionUser")).username;
   groups = [];
   users = [];
 
-  selectedEmail = "";
+  selectedUser = "";
   selectedGroup = "";
 
   constructor(
@@ -35,39 +37,41 @@ export class GroupComponent implements OnInit {
   }
 
   createGroup() {
-    if (this.groupname !== "") {
-      this.loginService
-        .createGroups(this.email, this.groupname)
-        .subscribe(data => {
-          console.log(data);
-          if (data.confirm == false) {
-            alert("Group name already exist");
-            this.groupname = "";
-          } else {
-            alert(this.groupname + " is successfully created");
-            this.router.navigateByUrl("/account");
-          }
-        });
+    if (this.groupname !== "" && this.assist1 !== "") {
+      if (this.assist1 == this.assist2) {
+        alert("Assistances cannot be the same person");
+      } else {
+        this.loginService
+          .createGroups(this.groupname, this.assist1, this.assist2)
+          .subscribe(data => {
+            console.log(data);
+            if (data.confirm === false) {
+              alert("Group name already exist");
+              this.groupname = "";
+            } else {
+              alert(this.groupname + " is successfully created");
+              this.router.navigateByUrl("/account");
+            }
+          });
+      }
     } else {
-      alert("Need to have a name!!");
+      alert("Please check all the requiments");
     }
   }
 
-  addMember() {
+  addMember(groupn: string) {
     // console.log(this.user_email);
-    console.log(this.selectedEmail);
+    console.log(this.selectedUser);
     console.log(this.selectedGroup);
 
-    this.loginService
-      .addMember(this.selectedEmail, this.selectedGroup)
-      .subscribe(data => {
-        if (data.confirmation == false) {
-          alert("User is already in that group");
-        } else {
-          alert(this.selectedEmail + " is added to " + this.selectedGroup);
-          this.router.navigateByUrl("/account");
-        }
-      });
+    this.loginService.addMember(this.selectedUser, groupn).subscribe(data => {
+      if (data.confirmation == false) {
+        alert("User is already in that group");
+      } else {
+        alert(this.selectedUser + " is added to " + this.selectedGroup);
+        this.router.navigateByUrl("/account");
+      }
+    });
   }
 
   removeGroup(groupname: string) {

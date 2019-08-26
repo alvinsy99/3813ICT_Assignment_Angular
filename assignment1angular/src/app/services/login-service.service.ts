@@ -22,9 +22,16 @@ export class LoginServiceService {
     });
   }
 
-  createAccountService(email: string, password: string) {
+  createAccountService(
+    email: string,
+    username: string,
+    isGroupAdmin: boolean,
+    password: string
+  ) {
     return this.http.post<User>(this.backend + "/api/register", {
       email: email,
+      username: username,
+      isGroupAdmin: isGroupAdmin,
       password: password
     });
   }
@@ -33,10 +40,9 @@ export class LoginServiceService {
     return this.http.get<any>(this.backend + "/getusers");
   }
 
-  removeUser(email: string, type: number) {
+  removeUser(email: string) {
     return this.http.post<any>(this.backend + "/api/delete", {
-      email: email,
-      type: type
+      email: email
     });
   }
 
@@ -44,16 +50,17 @@ export class LoginServiceService {
     return this.http.get<any>(this.backend + "/groups");
   }
 
-  createGroups(email: string, groupname: string) {
+  createGroups(groupname: string, assist1: string, assist2: string) {
     return this.http.post<any>(this.backend + "/groups", {
-      email: email,
-      groupname: groupname
+      groupname: groupname,
+      assist1: assist1,
+      assist2: assist2
     });
   }
 
-  addMember(email: string, groupname: string) {
+  addMember(username: string, groupname: string) {
     return this.http.post<any>(this.backend + "/addmember", {
-      email: email,
+      username: username,
       groupname: groupname
     });
   }

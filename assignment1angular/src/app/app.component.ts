@@ -34,4 +34,10 @@ export class AppComponent {
       this.router.navigateByUrl("/login");
     }
   }
+
+  checkLogIn() {
+    if (sessionStorage.getItem("sessionUser") === null) {
+      this.router.navigateByUrl("/login");
+    }
+  }
 }

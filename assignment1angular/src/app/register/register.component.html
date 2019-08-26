@@ -17,14 +17,31 @@
         required
       />
       <input
+        type="username"
+        id="username"
+        class="fadeIn second"
+        name="usernameRegister"
+        placeholder="Register new User name"
+        [(ngModel)]="usernameRegister"
+        required
+      />
+      <input
         type="password"
         id="password"
         class="fadeIn third"
-        name="login"
+        name="passwordRegister"
         placeholder="Password"
         [(ngModel)]="passwordRegister"
         required
       />
+      <p>
+        Group Admin ?
+        <select name="type" [(ngModel)]="type">
+          <option selected="selected" [ngValue]="false">No</option>
+          <option [ngValue]="true">Yes</option>
+        </select>
+      </p>
+
       <input
         type="submit"
         class="fadeIn fourth"

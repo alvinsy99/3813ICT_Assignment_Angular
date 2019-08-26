@@ -22,18 +22,21 @@ export class RemoveUserComponent implements OnInit {
     });
   }
 
-  removeUser(email: string, type: number) {
+  removeUser(email: string) {
     console.log(email);
-    this.loginService.removeUser(email, type).subscribe(data => {
-      if (data == true) {
-        this.router.navigateByUrl("/account");
+    if (email !== "a-user@mail.com") {
+      this.loginService.removeUser(email).subscribe(data => {
+        // this.router.navigateByUrl("/account");
         alert(email + " is removed!!!");
-      } else {
-        alert("Cannot remove this user!!");
-      }
-    }),
-      (error: HttpErrorResponse) => {
-        alert("Error" + error);
-      };
+        this.loginService.retrieveUser().subscribe(data => {
+          this.users = data;
+        });
+      }),
+        (error: HttpErrorResponse) => {
+          alert("Error" + error);
+        };
+    } else {
+      alert("Cannot remove super admin");
+    }
   }
 }

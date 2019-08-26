@@ -2,10 +2,10 @@
 
 <ul>
   <li *ngFor="let user of users">
-    {{ user.email }}
+    {{ user.username }} ({{ user.email }})
     <br />
-    <button (click)="removeUser(user.email, user.type)">
-      Remove {{ user.email }}
+    <button (click)="removeUser(user.email)">
+      Remove
     </button>
   </li>
 </ul>

@@ -1,20 +1,28 @@
 <h1>Account Page</h1>
 
-<h2>Email: {{ data.email }}</h2>
+<h2>Email: {{ user.email }}</h2>
+<h2>Username: {{ user.username }}</h2>
 
-<h2 *ngIf="data.type == 0">Type: Super Admin</h2>
+<h2 *ngIf="user.email == 'a-user@mail.com'">Type: Super Admin</h2>
 
-<h2 *ngIf="data.type == 1">Type: Group Admin</h2>
-<h2 *ngIf="data.type == 2">Type: User</h2>
+<h2 *ngIf="user.isGroupAdmin == true">Type: Group Admin</h2>
+<h2 *ngIf="user.isGroupAdmin == false">Type: User</h2>
 
-<a *ngIf="data.type == 0" routerLink="/register">Create a New User</a>
+<a *ngIf="user.email == 'a-user@mail.com'" routerLink="/register"
+  >Create a New User</a
+>
 
 <br />
 
-<a *ngIf="data.type == 0" routerLink="/remove_user">Remove a User</a>
+<a *ngIf="user.email == 'a-user@mail.com'" routerLink="/remove_user"
+  >Remove a User</a
+>
 
 <hr />
 
-<a *ngIf="data.type == 1" routerLink="/register">Create a New User</a>
 <br />
-<a *ngIf="data.type == 1" routerLink="/group">Create new Group</a>
+<a
+  *ngIf="user.email == 'a-user@mail.com' || user.isGroupAdmin == true"
+  routerLink="/group"
+  >Create new Group</a
+>

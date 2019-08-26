@@ -10,11 +10,31 @@
         id="login"
         class="fadeIn second"
         name="groupname"
-        placeholder="Create new Group"
+        placeholder="Enter new Group name"
         [(ngModel)]="groupname"
         autofocus
         required
       />
+      <p>
+        Choose Group Admin 1*:<select
+          name="assist1"
+          [(ngModel)]="assist1"
+          required
+        >
+          <option *ngFor="let user of users" [ngValue]="user.username">{{
+            user.username
+          }}</option>
+        </select>
+      </p>
+
+      <p>
+        Choose Group Admin 2:<select name="assist2" [(ngModel)]="assist2">
+          <option value=""></option>
+          <option *ngFor="let user of users" [ngValue]="user.username">{{
+            user.username
+          }}</option>
+        </select>
+      </p>
 
       <input
         type="submit"
@@ -32,33 +52,49 @@
   <li *ngFor="let group of groups">
     {{ group.group_name }}
 
-    <button (click)="removeGroup(group.group_name)">
+    <button
+      *ngIf="group.group_assist_1 == session || group.group_assist_2 == session"
+      (click)="removeGroup(group.group_name)"
+    >
       Remove {{ group.group_name }} group
     </button>
     <ol>
-      <li *ngFor="let member of group.members">
-        {{ member }}
-        <button (click)="removeMember(member, group.group_name)">
-          Remove {{ member }}
-        </button>
-      </li>
+      <li>Group Assist 1: {{ group.group_assist_1 }}</li>
+      <li>Group Assist 2: {{ group.group_assist_2 }}</li>
+
+      <ol>
+        <li *ngFor="let member of group.members">
+          {{ member }}
+          <button (click)="removeMember(member, group.group_name)">
+            Remove {{ member }}
+          </button>
+        </li>
+      </ol>
     </ol>
+
+    <p>
+      Add
+      <select name="user" [(ngModel)]="selectedUser">
+        <option *ngFor="let user of users" [ngValue]="user.username">{{
+          user.username
+        }}</option>
+      </select>
+      to {{ group.group_name }}
+      <input
+        [(ngModel)]="selectedGroup"
+        name="selectedGroup"
+        [value]="group.group_name"
+        [value]="group.group_name"
+        hidden
+      />
+      <!-- <select name="groupname" [(ngModel)]="selectedGroup">
+        <option *ngFor="let group of groups" [ngValue]="group.group_name">{{
+          group.group_name
+        }}</option>
+      </select> -->
+      <button (click)="addMember(group.group_name)">Add</button>
+    </p>
   </li>
 </ul>
 
-<p>
-  Add
-  <select name="user" [(ngModel)]="selectedEmail">
-    <option *ngFor="let user of users" [value]="user.email">{{
-      user.email
-    }}</option>
-  </select>
-  to
-  <select name="groupname" [(ngModel)]="selectedGroup">
-    <option *ngFor="let group of groups" [value]="group.group_name">{{
-      group.group_name
-    }}</option>
-  </select>
-  <button (click)="addMember()">Add</button>
-</p>
 <p></p>

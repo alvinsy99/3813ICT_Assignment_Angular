@@ -10,7 +10,9 @@ import { saveAs } from "file-saver";
 })
 export class RegisterComponent implements OnInit {
   emailRegister = "";
+  usernameRegister = "";
   passwordRegister = "";
+  type: boolean = false;
 
   private data;
 
@@ -23,18 +25,26 @@ export class RegisterComponent implements OnInit {
 
   createAccount() {
     console.log(this.emailRegister);
+    console.log(this.usernameRegister);
+    console.log(this.type);
     console.log(this.passwordRegister);
 
     this.loginService
-      .createAccountService(this.emailRegister, this.passwordRegister)
+      .createAccountService(
+        this.emailRegister,
+        this.usernameRegister,
+        this.type,
+        this.passwordRegister
+      )
       .subscribe(data => {
         if (data.valid == false) {
-          alert("Email is already taken");
+          alert("Email or Username is already taken");
           this.emailRegister = "";
+          this.usernameRegister = "";
           this.passwordRegister = "";
         } else {
           this.router.navigateByUrl("/account");
-          alert("Email has been registered!!!");
+          alert("User has been registered!!!");
         }
       });
 
