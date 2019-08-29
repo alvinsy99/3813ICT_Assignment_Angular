@@ -19,6 +19,8 @@ export class GroupComponent implements OnInit {
 
   selectedUser = "";
   selectedGroup = "";
+  selectedUserChannel = "";
+  selectedChannel = "";
 
   constructor(
     private router: Router,
@@ -111,6 +113,26 @@ export class GroupComponent implements OnInit {
           alert("Channel name existed");
         } else {
           alert(this.channelName + "is created!!");
+        }
+      });
+  }
+
+  addUserToChannel(groupname: string) {
+    console.log(groupname);
+    console.log(this.selectedChannel);
+    console.log(this.selectedUserChannel);
+
+    this.loginService
+      .addUserToChannel(
+        this.selectedChannel,
+        groupname,
+        this.selectedUserChannel
+      )
+      .subscribe(data => {
+        if (data.confirmation == false) {
+          alert("User already in " + this.selectedChannel + " channel");
+        } else {
+          alert("Add user successfully");
         }
       });
   }

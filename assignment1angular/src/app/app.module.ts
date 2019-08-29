@@ -6,14 +6,23 @@ import { CommonModule } from "@angular/common";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { LoginComponent } from './login/login.component';
-import { AccountComponent } from './account/account.component';
-import { RegisterComponent } from './register/register.component';
-import { RemoveUserComponent } from './remove-user/remove-user.component';
-import { GroupComponent } from './group/group.component';
+import { LoginComponent } from "./login/login.component";
+import { AccountComponent } from "./account/account.component";
+import { RegisterComponent } from "./register/register.component";
+import { RemoveUserComponent } from "./remove-user/remove-user.component";
+import { GroupComponent } from "./group/group.component";
+import { ChannelDetailsComponent } from "./channel-details/channel-details.component";
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, AccountComponent, RegisterComponent, RemoveUserComponent, GroupComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    AccountComponent,
+    RegisterComponent,
+    RemoveUserComponent,
+    GroupComponent,
+    ChannelDetailsComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

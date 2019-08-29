@@ -29,6 +29,29 @@ module.exports = function(app, path) {
     });
   });
 
+  app.post("/channel", function(req, res) {
+    fs.readFile("groups.json", "utf-8", function(err, data) {
+      if (err) throw err;
+      groups = JSON.parse(data);
+
+      var find_group = groups.group_list
+        .map(name => {
+          return name.group_name;
+        })
+        .indexOf(req.body.groupname);
+      // console.log(groups.group_list[find_group].channels);
+      var find_channel = groups.group_list[find_group].channels
+        .map(channel => {
+          return channel.channel_name;
+        })
+        .indexOf(req.body.channelname);
+
+      var current = groups.group_list[find_group].channels[find_channel];
+      console.log(groups.group_list[find_group].channels[find_channel]);
+      res.send(current);
+    });
+  });
+
   app.post("/groups", function(req, res) {
     var new_group = {};
 
@@ -214,6 +237,7 @@ module.exports = function(app, path) {
       channel = {};
       channel.channel_name = "";
       channel.channel_members = [];
+      channel.channel_message = [];
       groups = JSON.parse(data);
       var find_group = groups.group_list
         .map(name => {
@@ -254,6 +278,49 @@ module.exports = function(app, path) {
         if (err) throw err;
       });
 
+      res.send(check);
+    });
+  });
+
+  app.post("/addUserToChannel", function(req, res) {
+    console.log(req.body.channelname);
+    console.log(req.body.groupname);
+    console.log(req.body.member);
+
+    fs.readFile("groups.json", "utf-8", function(err, data) {
+      if (err) throw err;
+      check = {};
+      check.confirmation = false;
+      groups = JSON.parse(data);
+      var find_group = groups.group_list
+        .map(name => {
+          return name.group_name;
+        })
+        .indexOf(req.body.groupname);
+      // console.log(groups.group_list[find_group].channels);
+      var find_channel = groups.group_list[find_group].channels
+        .map(channel => {
+          return channel.channel_name;
+        })
+        .indexOf(req.body.channelname);
+
+      var find_member_in_group = groups.group_list[find_group].channels[
+        find_channel
+      ].channel_members.indexOf(req.body.member);
+
+      if (find_member_in_group == -1 && req.body.member !== "") {
+        groups.group_list[find_group].channels[
+          find_channel
+        ].channel_members.push(req.body.member);
+        check.confirmation = true;
+      } else {
+        check.confirmation = false;
+      }
+      console.log(groups.group_list[find_group].channels[find_channel]);
+      json = JSON.stringify(groups);
+      fs.writeFile("groups.json", json, "utf-8", function(err) {
+        if (err) throw err;
+      });
       res.send(check);
     });
   });

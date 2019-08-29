@@ -91,4 +91,19 @@ export class LoginServiceService {
       member: member
     });
   }
+
+  addUserToChannel(channelname: string, groupname: string, member: string) {
+    return this.http.post<any>(this.backend + "/addUserToChannel", {
+      channelname: channelname,
+      groupname: groupname,
+      member: member
+    });
+  }
+
+  getChannel(channelname: string, groupname: string) {
+    return this.http.post<any>(this.backend + "/channel", {
+      channelname: channelname,
+      groupname: groupname
+    });
+  }
 }

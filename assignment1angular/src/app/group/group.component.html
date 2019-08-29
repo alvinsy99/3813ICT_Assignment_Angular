@@ -61,6 +61,35 @@
     >
       Remove {{ group.group_name }} group
     </button>
+
+    <!-- Display the add user to group form -->
+    <p
+      *ngIf="
+        group.group_admin == session.username ||
+        group.group_assist_1 == session.username ||
+        group.group_assist_2 == session.username ||
+        session.email == 'a-user@mail.com'
+      "
+    >
+      Add
+      <select name="user" [(ngModel)]="selectedUser">
+        <option *ngFor="let user of users" [ngValue]="user.username">{{
+          user.username
+        }}</option>
+      </select>
+      to {{ group.group_name }}
+      <input
+        [(ngModel)]="selectedGroup"
+        name="selectedGroup"
+        [value]="group.group_name"
+        [value]="group.group_name"
+        hidden
+      />
+
+      <button (click)="addMember(group.group_name)">Add</button>
+    </p>
+
+    <!-- Display user in group -->
     <ol
       *ngIf="
         session.email == 'a-user@mail.com' ||
@@ -92,43 +121,39 @@
         </li>
       </ol>
     </ol>
-
-    <p
-      *ngIf="
-        group.group_admin == session.username ||
-        group.group_assist_1 == session.username ||
-        group.group_assist_2 == session.username ||
-        session.email == 'a-user@mail.com'
-      "
-    >
-      Add
-      <select name="user" [(ngModel)]="selectedUser">
-        <option *ngFor="let user of users" [ngValue]="user.username">{{
-          user.username
+    <p></p>
+    <ul>
+      <li *ngFor="let channel of group.channels">
+        {{ channel.channel_name }} ({{ channel.channel_members }})
+      </li>
+    </ul>
+    <p>
+      Add {{ selectedUserChannel }} to {{ selectedChannel }} channel
+      <br />
+      <select name="selectedUserChannel" [(ngModel)]="selectedUserChannel">
+        <option *ngFor="let user of group.members" [ngValue]="user">{{
+          user
         }}</option>
       </select>
-      to {{ group.group_name }}
-      <input
-        [(ngModel)]="selectedGroup"
-        name="selectedGroup"
-        [value]="group.group_name"
-        [value]="group.group_name"
-        hidden
-      />
-      <!-- <select name="groupname" [(ngModel)]="selectedGroup">
-        <option *ngFor="let group of groups" [ngValue]="group.group_name">{{
-          group.group_name
-        }}</option>
-      </select> -->
-      <button (click)="addMember(group.group_name)">Add</button>
-    </p>
+      to
+      <select name="selectedChannel" [(ngModel)]="selectedChannel">
+        <option *ngFor="let channel of group.channels"
+          ><button [routerLink]="['/channels', channel.channel_name]">
+            {{ channel.channel_name }}
+          </button></option
+        >
+      </select>
 
-    <p>
-      <input [(ngModel)]="channelName" name="channelName" type="input" />
-      <button (click)="createChannel(group.group_name, session.username)">
-        Create channel
+      <!-- Button to add user to channel -->
+      <button (click)="addUserToChannel(group.group_name)">
+        Add
       </button>
+      <a [routerLink]="['/channel', 'nnnn', 'mmmm']">Go to mmmm channel</a>
     </p>
+    <input [(ngModel)]="channelName" name="channelName" type="input" />
+    <button (click)="createChannel(group.group_name, session.username)">
+      Create channel
+    </button>
   </li>
 </ul>
 
