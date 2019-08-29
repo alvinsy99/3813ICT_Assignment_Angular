@@ -12,7 +12,7 @@ export class GroupComponent implements OnInit {
   groupname = "";
   assist1 = "";
   assist2 = "";
-  session = JSON.parse(sessionStorage.getItem("sessionUser")).username;
+  session = JSON.parse(sessionStorage.getItem("sessionUser"));
   groups = [];
   users = [];
 
@@ -34,15 +34,17 @@ export class GroupComponent implements OnInit {
     this.loginService.retrieveUser().subscribe(data => {
       this.users = data;
     });
+
+    console.log(this.session);
   }
 
-  createGroup() {
+  createGroup(groupadmin: string) {
     if (this.groupname !== "" && this.assist1 !== "") {
       if (this.assist1 == this.assist2) {
         alert("Assistances cannot be the same person");
       } else {
         this.loginService
-          .createGroups(this.groupname, this.assist1, this.assist2)
+          .createGroups(this.groupname, groupadmin, this.assist1, this.assist2)
           .subscribe(data => {
             console.log(data);
             if (data.confirm === false) {

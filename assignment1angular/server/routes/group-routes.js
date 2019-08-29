@@ -24,7 +24,7 @@ module.exports = function(app, path) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
       groups = JSON.parse(data);
-      console.log(groups);
+
       res.send(groups.group_list);
     });
   });
@@ -33,6 +33,7 @@ module.exports = function(app, path) {
     var new_group = {};
 
     new_group.group_name = "";
+    new_group.group_admin = "";
     new_group.group_assist_1 = "";
     new_group.group_assist_2 = "";
     new_group.confirm = false;
@@ -56,14 +57,17 @@ module.exports = function(app, path) {
 
       if (exist_name == -1) {
         new_group.group_name = req.body.groupname;
+        new_group.group_admin = req.body.groupadmin;
         new_group.group_assist_1 = req.body.assist1;
         new_group.group_assist_2 = req.body.assist2;
-        new_group.members = new Array(req.body.assist1);
+        new_group.members = new Array(req.body.groupadmin);
+        new_group.members.push(req.body.assist1);
         if (new_group.group_assist_2 !== "") {
           new_group.members.push(req.body.assist2);
         }
 
         groups.group_list.push(new_group);
+        console.log(groups);
         json = JSON.stringify(groups);
         fs.writeFile("groups.json", json, "utf-8", function(err) {
           if (err) throw err;
@@ -78,9 +82,7 @@ module.exports = function(app, path) {
 
   app.post("/addmember", function(req, res) {
     // console.log(server.groups);
-    console.log("FROM HERE");
-    console.log("NAME: " + req.body.groupname);
-    console.log("NAME: " + req.body.username);
+
     if (!req.body) {
       return res.sendStatus(400);
     }
@@ -164,6 +166,7 @@ module.exports = function(app, path) {
         .indexOf(req.body.membername);
       console.log(find_user);
 
+      // Check if user being removing is the group assist 1
       if (req.body.membername == groups.group_list[find_group].group_assist_1) {
         if (groups.group_list[find_group].group_assist_2 !== "") {
           check.confirmation = true;
@@ -172,22 +175,40 @@ module.exports = function(app, path) {
         } else {
           check.confirmation = false;
         }
-      } else if (
+      }
+      // Check if user being removing is the group assist 2
+      else if (
         req.body.membername == groups.group_list[find_group].group_assist_2
       ) {
-        check.confirmation = true;
-        groups.group_list[find_group].group_assist_2 = "";
-        groups.group_list[find_group].members.splice(find_user, 1);
+        if (groups.group_list[find_group].group_assist_1 !== "") {
+          check.confirmation = true;
+          groups.group_list[find_group].group_assist_2 = "";
+          groups.group_list[find_group].members.splice(find_user, 1);
+        } else {
+          check.confirmation = false;
+        }
       } else {
         check.confirmation = true;
         groups.group_list[find_group].members.splice(find_user, 1);
       }
+
+      // Group admin cannot be removed
+      if (req.body.membername == groups.group_list[find_group].group_admin) {
+        check.confirmation = false;
+      }
+
       console.log(groups.group_list.members);
       json = JSON.stringify(groups);
       fs.writeFile("groups.json", json, "utf-8", function(err) {
         if (err) throw err;
       });
       res.send(check);
+    });
+  });
+
+  app.post("/channels", function(req, res) {
+    fs.readFile("groups.json", "utf-8", function(data, err) {
+      if (err) throw err;
     });
   });
 };

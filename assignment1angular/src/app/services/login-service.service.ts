@@ -50,9 +50,15 @@ export class LoginServiceService {
     return this.http.get<any>(this.backend + "/groups");
   }
 
-  createGroups(groupname: string, assist1: string, assist2: string) {
+  createGroups(
+    groupname: string,
+    groupadmin: string,
+    assist1: string,
+    assist2: string
+  ) {
     return this.http.post<any>(this.backend + "/groups", {
       groupname: groupname,
+      groupadmin: groupadmin,
       assist1: assist1,
       assist2: assist2
     });

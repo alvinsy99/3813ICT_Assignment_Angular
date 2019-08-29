@@ -5,8 +5,16 @@
 
 <h2 *ngIf="user.email == 'a-user@mail.com'">Type: Super Admin</h2>
 
-<h2 *ngIf="user.isGroupAdmin == true">Type: Group Admin</h2>
+<h2 *ngIf="user.isGroupAdmin == true">
+  Type: Group Admin
+  <ul *ngFor="let group of groups">
+    <li *ngIf="group.group_admin == user.username">
+      {{ group.group_name }}
+    </li>
+  </ul>
+</h2>
 <h2 *ngIf="user.isGroupAdmin == false">Type: User</h2>
+<h3></h3>
 
 <a *ngIf="user.email == 'a-user@mail.com'" routerLink="/register"
   >Create a New User</a
@@ -21,8 +29,4 @@
 <hr />
 
 <br />
-<a
-  *ngIf="user.email == 'a-user@mail.com' || user.isGroupAdmin == true"
-  routerLink="/group"
-  >Create new Group</a
->
+<a routerLink="/group">Groups List</a>

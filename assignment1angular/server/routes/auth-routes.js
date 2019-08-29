@@ -1,17 +1,14 @@
 var server = require("../server.js");
 var fs = require("fs");
 
-var jsonfile = {};
-
 module.exports = function(app, path) {
   // retrieve all users
   app.get("/getusers", function(req, res) {
     fs.readFile("users.json", "utf-8", function(err, data) {
       if (err) throw err;
-      console.log(data);
+
       valid_user = JSON.parse(data);
 
-      console.log(valid_user);
       res.send(valid_user.valid_user_list);
     });
   });
