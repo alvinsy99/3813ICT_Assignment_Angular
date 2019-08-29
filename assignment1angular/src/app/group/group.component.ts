@@ -15,6 +15,7 @@ export class GroupComponent implements OnInit {
   session = JSON.parse(sessionStorage.getItem("sessionUser"));
   groups = [];
   users = [];
+  channelName = "";
 
   selectedUser = "";
   selectedGroup = "";
@@ -97,5 +98,20 @@ export class GroupComponent implements OnInit {
         }
       });
     }
+  }
+
+  createChannel(groupname: string, membername: string) {
+    console.log(groupname);
+    console.log(membername);
+
+    this.loginService
+      .createChannel(this.channelName, groupname, membername)
+      .subscribe(data => {
+        if (data.confirmation == false) {
+          alert("Channel name existed");
+        } else {
+          alert(this.channelName + "is created!!");
+        }
+      });
   }
 }

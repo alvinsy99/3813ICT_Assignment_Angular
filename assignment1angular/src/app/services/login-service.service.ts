@@ -83,4 +83,12 @@ export class LoginServiceService {
       groupname: groupname
     });
   }
+
+  createChannel(channelname: string, groupname: string, member: string) {
+    return this.http.post<any>(this.backend + "/channels", {
+      channelname: channelname,
+      groupname: groupname,
+      member: member
+    });
+  }
 }

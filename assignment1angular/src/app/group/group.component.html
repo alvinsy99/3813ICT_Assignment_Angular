@@ -122,6 +122,13 @@
       </select> -->
       <button (click)="addMember(group.group_name)">Add</button>
     </p>
+
+    <p>
+      <input [(ngModel)]="channelName" name="channelName" type="input" />
+      <button (click)="createChannel(group.group_name, session.username)">
+        Create channel
+      </button>
+    </p>
   </li>
 </ul>
 

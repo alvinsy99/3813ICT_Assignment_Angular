@@ -207,8 +207,54 @@ module.exports = function(app, path) {
   });
 
   app.post("/channels", function(req, res) {
-    fs.readFile("groups.json", "utf-8", function(data, err) {
+    fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
+      check = {};
+      check.confirmation = false;
+      channel = {};
+      channel.channel_name = "";
+      channel.channel_members = [];
+      groups = JSON.parse(data);
+      var find_group = groups.group_list
+        .map(name => {
+          return name.group_name;
+        })
+        .indexOf(req.body.groupname);
+      console.log(groups.group_list);
+      console.log(groups.group_list[find_group].channels);
+      console.log(groups.group_list[find_group].hasOwnProperty("channels"));
+
+      // console.log(groups.group_list[find_group]["channels"]);
+      if (groups.group_list[find_group].hasOwnProperty("channels")) {
+        var exist_channel_name = groups.group_list[find_group].channels
+          .map(channel => {
+            return channel.channel_name;
+          })
+          .indexOf(req.body.channelname);
+
+        if (exist_channel_name == -1) {
+          check.confirmation = true;
+          channel.channel_name = req.body.channelname;
+          channel.channel_members.push(req.body.member);
+          groups.group_list[find_group].channels.push(channel);
+        } else {
+          check.confirmation = false;
+        }
+      } else {
+        channel.channel_name = req.body.channelname;
+        channel.channel_members.push(req.body.member);
+        groups.group_list[find_group].channels = new Array(channel);
+        check.confirmation = true;
+
+        console.log(groups.group_list[find_group]);
+        console.log(groups.group_list[find_group].channels);
+      }
+      json = JSON.stringify(groups);
+      fs.writeFile("groups.json", json, "utf-8", function(err) {
+        if (err) throw err;
+      });
+
+      res.send(check);
     });
   });
 };
