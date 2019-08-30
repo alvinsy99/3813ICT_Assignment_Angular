@@ -22,6 +22,7 @@ module.exports = function(app, path) {
     customer.email = "";
     customer.password = "";
     customer.username = "";
+    customer.isSuperAdmin = false;
     customer.isGroupAdmin = false;
     customer.valid = false;
     // customer.email = req.body.email;
@@ -44,6 +45,7 @@ module.exports = function(app, path) {
           customer.email = valid_user.valid_user_list[i].email;
           customer.password = valid_user.valid_user_list[i].password;
           customer.username = valid_user.valid_user_list[i].username;
+          customer.isSuperAdmin = valid_user.valid_user_list[i].isSuperAdmin;
           customer.isGroupAdmin = valid_user.valid_user_list[i].isGroupAdmin;
           res.send(customer);
         }
@@ -61,6 +63,7 @@ module.exports = function(app, path) {
     customer.email = "";
     customer.password = "";
     customer.username = "";
+    customer.isSuperAdmin = false;
     customer.isGroupAdmin = false;
     customer.valid = false;
 
@@ -86,6 +89,7 @@ module.exports = function(app, path) {
         customer.email = req.body.email;
         customer.username = req.body.username;
         customer.password = req.body.password;
+        customer.isSuperAdmin = req.body.isSuperAdmin;
         customer.isGroupAdmin = req.body.isGroupAdmin;
 
         // update json file
@@ -138,5 +142,30 @@ module.exports = function(app, path) {
       });
     });
     res.send(data);
+  });
+
+  app.post("/grandsuper", function(req, res) {
+    fs.readFile("users.json", "utf-8", function(err, data) {
+      if (err) throw err;
+
+      valid_user = JSON.parse(data);
+
+      var user_index = valid_user.valid_user_list
+        .map(function(data) {
+          return data.email;
+        })
+        .indexOf(req.body.email);
+      if (valid_user.valid_user_list[user_index].isSuperAdmin == true) {
+        res.send(false);
+      } else {
+        valid_user.valid_user_list[user_index].isSuperAdmin = true;
+        json = JSON.stringify(valid_user);
+        fs.writeFile("users.json", json, "utf-8", function(err) {
+          if (err) throw err;
+        });
+        res.send(true);
+      }
+      console.log(valid_user.valid_user_list);
+    });
   });
 };

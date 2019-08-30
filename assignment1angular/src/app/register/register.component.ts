@@ -12,7 +12,8 @@ export class RegisterComponent implements OnInit {
   emailRegister = "";
   usernameRegister = "";
   passwordRegister = "";
-  type: boolean = false;
+  groupadmin: boolean = false;
+  superadmin: boolean = false;
 
   private data;
 
@@ -26,14 +27,16 @@ export class RegisterComponent implements OnInit {
   createAccount() {
     console.log(this.emailRegister);
     console.log(this.usernameRegister);
-    console.log(this.type);
+    console.log(this.groupadmin);
+    console.log(this.superadmin);
     console.log(this.passwordRegister);
 
     this.loginService
       .createAccountService(
         this.emailRegister,
         this.usernameRegister,
-        this.type,
+        this.groupadmin,
+        this.superadmin,
         this.passwordRegister
       )
       .subscribe(data => {

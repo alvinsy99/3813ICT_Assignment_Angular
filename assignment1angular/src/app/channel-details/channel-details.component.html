@@ -27,9 +27,12 @@
                   <li>
                     <h5>
                       {{ member }}
-                      <p *ngIf="session.username == member">(you are online)</p>
-                      <span class="chat_date"
-                        ><button
+
+                      <span class="chat_date">
+                        <p *ngIf="session.username == member">
+                          (you are online)
+                        </p>
+                        <button
                           *ngIf="
                             session.email == 'a-user@email.com' ||
                             group.group_admin == session.username ||

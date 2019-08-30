@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Output, EventEmitter } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 interface User {
@@ -12,9 +12,17 @@ interface User {
 })
 export class LoginServiceService {
   backend = "http://localhost:3000";
-
+  @Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
   constructor(private http: HttpClient) {}
-
+  successlogin(email: string, password: string) {
+    if (this.logIn(email, password)) {
+      this.getLoggedInName.emit(email);
+      return true;
+    } else {
+      this.getLoggedInName.emit("Log In");
+      return false;
+    }
+  }
   logIn(email: string, password: string) {
     return this.http.post<User>(this.backend + "/api/auth", {
       email: email,
@@ -26,12 +34,14 @@ export class LoginServiceService {
     email: string,
     username: string,
     isGroupAdmin: boolean,
+    isSuperAdmin: boolean,
     password: string
   ) {
     return this.http.post<User>(this.backend + "/api/register", {
       email: email,
       username: username,
       isGroupAdmin: isGroupAdmin,
+      isSuperAdmin: isSuperAdmin,
       password: password
     });
   }
@@ -125,6 +135,12 @@ export class LoginServiceService {
     return this.http.post<any>(this.backend + "/removechannel", {
       groupname: groupname,
       channelname: channelname
+    });
+  }
+
+  grandSuper(email: string) {
+    return this.http.post<any>(this.backend + "/grandsuper", {
+      email: email
     });
   }
 }

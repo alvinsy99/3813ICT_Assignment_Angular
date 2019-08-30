@@ -96,7 +96,6 @@ export class GroupComponent implements OnInit {
       this.loginService.removeGroup(groupname).subscribe();
       this.loginService.getGroups().subscribe(data => {
         this.groups = data;
-        console.log(data);
       });
       alert(groupname + " has been removed");
     }

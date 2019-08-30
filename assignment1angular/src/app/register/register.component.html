@@ -36,7 +36,14 @@
       />
       <p>
         Group Admin ?
-        <select name="type" [(ngModel)]="type">
+        <select name="groupadmin" [(ngModel)]="groupadmin">
+          <option selected="selected" [ngValue]="false">No</option>
+          <option [ngValue]="true">Yes</option>
+        </select>
+      </p>
+      <p>
+        Super Admin ?
+        <select name="superadmin" [(ngModel)]="superadmin">
           <option selected="selected" [ngValue]="false">No</option>
           <option [ngValue]="true">Yes</option>
         </select>

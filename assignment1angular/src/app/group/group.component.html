@@ -4,7 +4,7 @@
   <div id="formContent">
     <!-- Tabs Titles -->
 
-    <form *ngIf="session.isGroupAdmin == true">
+    <form *ngIf="session.isGroupAdmin == true || session.isSuperAdmin == true">
       <input
         type="text"
         id="login"
@@ -54,8 +54,7 @@
     <h2>{{ group.group_name }}</h2>
     <button
       *ngIf="
-        group.group_admin == session.username ||
-        session.email == 'a-user@mail.com'
+        group.group_admin == session.username || session.isSuperAdmin == true
       "
       (click)="removeGroup(group.group_name)"
     >
@@ -68,7 +67,7 @@
         group.group_admin == session.username ||
         group.group_assist_1 == session.username ||
         group.group_assist_2 == session.username ||
-        session.email == 'a-user@mail.com'
+        session.isSuperAdmin == true
       "
     >
       Add
@@ -91,11 +90,11 @@
     <!-- Display user in group -->
     <ol
       *ngIf="
-        session.email == 'a-user@mail.com' ||
+        session.isSuperAdmin == true ||
         group.group_admin == session.username ||
         group.group_assist_1 == session.username ||
         group.group_assist_2 == session.username ||
-        group.members.indexOf(session.username) >= 1
+        group.members.indexOf(session.username) >= 0
       "
     >
       <li>Group Admin: {{ group.group_admin }}</li>
@@ -111,7 +110,7 @@
               (group.group_admin == session.username ||
                 group.group_assist_1 == session.username ||
                 group.group_assist_2 == session.username ||
-                session.email == 'a-user@mail.com') &&
+                session.isSuperAdmin == true) &&
               member !== session.username
             "
           >
@@ -158,7 +157,7 @@
         group.group_admin == session.username ||
         group.group_assist_1 == session.username ||
         group.group_assist_2 == session.username ||
-        session.email == 'a-user@mail.com'
+        session.isSuperAdmin == true
       "
     >
       <input [(ngModel)]="channelName" name="channelName" type="input" />

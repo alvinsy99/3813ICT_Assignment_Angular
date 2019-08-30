@@ -10,6 +10,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 })
 export class RemoveUserComponent implements OnInit {
   users = [];
+  session = JSON.parse(sessionStorage.getItem("sessionUser"));
 
   constructor(
     private router: Router,
@@ -38,5 +39,18 @@ export class RemoveUserComponent implements OnInit {
     } else {
       alert("Cannot remove super admin");
     }
+  }
+
+  grandSuper(email: string) {
+    this.loginService.grandSuper(email).subscribe(data => {
+      if (data == false) {
+        alert("User is a super admin");
+      } else {
+        this.loginService.retrieveUser().subscribe(data => {
+          this.users = data;
+        });
+        alert("Permission Granted to " + email);
+      }
+    });
   }
 }

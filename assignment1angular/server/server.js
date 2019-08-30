@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, "../dist/assignment1angular")));
 //   email: "a-user@mail.com",
 //   username: "Super Admin A",
 //   password: "123a",
+//   isSuperAdmin: true,
 //   isGroupAdmin: true,
 //   valid: ""
 // };
