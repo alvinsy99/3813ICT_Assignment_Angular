@@ -126,8 +126,8 @@ module.exports = function(app, path) {
         console.log(user_index);
         // delete valid_user[user_index];
         valid_user.valid_user_list.splice(user_index, 1);
-        console.log(server.valid_user);
-        console.log(server.valid_user.valid_user_list.length);
+        console.log(valid_user);
+        console.log(valid_user.valid_user_list.length);
         data = true;
       }
 

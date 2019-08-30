@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginServiceService } from "../services/login-service.service";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -9,6 +9,7 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./group.component.css"]
 })
 export class GroupComponent implements OnInit {
+  @Output() click = new EventEmitter();
   groupname = "";
   assist1 = "";
   assist2 = "";
@@ -29,6 +30,7 @@ export class GroupComponent implements OnInit {
 
   ngOnInit() {
     console.log("FROM GROUP COMPONENT");
+    this.click.emit();
     this.loginService.getGroups().subscribe(data => {
       this.groups = data;
       console.log(data);
@@ -54,8 +56,15 @@ export class GroupComponent implements OnInit {
               alert("Group name already exist");
               this.groupname = "";
             } else {
+              this.loginService.getGroups().subscribe(data => {
+                this.groups = data;
+                console.log(data);
+              });
+
               alert(this.groupname + " is successfully created");
-              this.router.navigateByUrl("/account");
+              this.groupname = "";
+              this.assist1 = "";
+              this.assist2 = "";
             }
           });
       }
@@ -66,15 +75,18 @@ export class GroupComponent implements OnInit {
 
   addMember(groupn: string) {
     // console.log(this.user_email);
-    console.log(this.selectedUser);
-    console.log(this.selectedGroup);
 
     this.loginService.addMember(this.selectedUser, groupn).subscribe(data => {
       if (data.confirmation == false) {
         alert("User is already in that group");
       } else {
-        alert(this.selectedUser + " is added to " + this.selectedGroup);
-        this.router.navigateByUrl("/account");
+        this.loginService.getGroups().subscribe(data => {
+          this.groups = data;
+          console.log(data);
+        });
+
+        alert(this.selectedUser + " is added to " + groupn);
+        this.selectedUser = "";
       }
     });
   }
@@ -82,8 +94,11 @@ export class GroupComponent implements OnInit {
   removeGroup(groupname: string) {
     if (confirm("Are you sure to delete " + groupname)) {
       this.loginService.removeGroup(groupname).subscribe();
+      this.loginService.getGroups().subscribe(data => {
+        this.groups = data;
+        console.log(data);
+      });
       alert(groupname + " has been removed");
-      this.router.navigateByUrl("/account");
     }
   }
 
@@ -95,8 +110,11 @@ export class GroupComponent implements OnInit {
         if (data.confirmation == false) {
           alert("Cannot remove the group admin");
         } else {
+          this.loginService.getGroups().subscribe(data => {
+            this.groups = data;
+            console.log(data);
+          });
           alert(membername + " has been removed from " + groupname);
-          this.router.navigateByUrl("/account");
         }
       });
     }
@@ -112,28 +130,40 @@ export class GroupComponent implements OnInit {
         if (data.confirmation == false) {
           alert("Channel name existed");
         } else {
+          this.loginService.getGroups().subscribe(data => {
+            this.groups = data;
+            console.log(data);
+          });
+
           alert(this.channelName + "is created!!");
+          this.channelName = "";
         }
       });
   }
 
-  addUserToChannel(groupname: string) {
-    console.log(groupname);
-    console.log(this.selectedChannel);
-    console.log(this.selectedUserChannel);
+  // addUserToChannel(groupname: string) {
+  //   console.log(groupname);
+  //   console.log(this.selectedChannel);
+  //   console.log(this.selectedUserChannel);
 
-    this.loginService
-      .addUserToChannel(
-        this.selectedChannel,
-        groupname,
-        this.selectedUserChannel
-      )
-      .subscribe(data => {
-        if (data.confirmation == false) {
-          alert("User already in " + this.selectedChannel + " channel");
-        } else {
-          alert("Add user successfully");
-        }
-      });
-  }
+  //   this.loginService
+  //     .addUserToChannel(
+  //       this.selectedChannel,
+  //       groupname,
+  //       this.selectedUserChannel
+  //     )
+  //     .subscribe(data => {
+  //       if (data.confirmation == false) {
+  //         alert("User already in " + this.selectedChannel + " channel");
+  //       } else {
+  //         this.loginService.getGroups().subscribe(data => {
+  //           this.groups = data;
+  //           console.log(data);
+  //         });
+  //         this.selectedChannel = "";
+  //         this.selectedUserChannel = "";
+  //         alert("Add user successfully");
+  //       }
+  //     });
+  // }
 }

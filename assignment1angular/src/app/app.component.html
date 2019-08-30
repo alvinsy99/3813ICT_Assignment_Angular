@@ -2,18 +2,40 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Assignment 1</a>
 
-  <div class="navbar-nav">
-    <a class="nav-item nav-link active" routerLink="/"
-      >Home <span class="sr-only">(current)</span></a
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-item nav-link active" routerLink="/"
+          >Home <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-item nav-link"
+          routerLink="/account"
+          (click)="checkProfile()"
+          >Profile</a
+        >
+      </li>
+    </ul>
+  </div>
+  <div>
+    <span class="navbar-text"
+      ><a
+        class="nav-item nav-link"
+        *ngIf="data === null; else loggedOut"
+        routerLink="/login"
+        (click)="checkLogIn()"
+        >Log In</a
+      ></span
     >
-    <a class="nav-item nav-link" routerLink="/login" (click)="checkLogIn()"
-      >Log In</a
-    >
-    <a class="nav-item nav-link" routerLink="/login" (click)="logOut()"
-      >Log Out</a
-    >
-    <a class="nav-item nav-link" routerLink="/account" (click)="checkProfile()"
-      >Profile</a
+
+    <ng-template #loggedOut
+      ><span class="navbar-text"
+        ><a class="nav-item nav-link" routerLink="/login" (click)="logOut()"
+          >Log Out</a
+        ></span
+      ></ng-template
     >
   </div>
 </nav>

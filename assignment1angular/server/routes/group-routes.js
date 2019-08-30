@@ -20,6 +20,7 @@ var fs = require("fs");
 // console.log(find_user);
 // console.log(groups[0].members);
 module.exports = function(app, path) {
+  // Retrieve all groups
   app.get("/groups", function(req, res) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
@@ -29,6 +30,58 @@ module.exports = function(app, path) {
     });
   });
 
+  // Retrieve a specific group by name
+  app.post("/getgroupbyname", function(req, res) {
+    fs.readFile("groups.json", "utf-8", function(err, data) {
+      if (err) throw err;
+      groups = JSON.parse(data);
+      var find_group = groups.group_list
+        .map(name => {
+          return name.group_name;
+        })
+        .indexOf(req.body.groupname);
+      res.send(groups.group_list[find_group]);
+    });
+  });
+
+  // Remove user from a channel
+  app.post("/removeuserchannel", function(req, res) {
+    fs.readFile("groups.json", "utf-8", function(err, data) {
+      if (err) throw err;
+      groups = JSON.parse(data);
+
+      var find_group = groups.group_list
+        .map(name => {
+          return name.group_name;
+        })
+        .indexOf(req.body.groupname);
+
+      var find_channel = groups.group_list[find_group].channels
+        .map(name => {
+          return name.channel_name;
+        })
+        .indexOf(req.body.channelname);
+
+      var find_member = groups.group_list[find_group].channels[
+        find_channel
+      ].channel_members.indexOf(req.body.member);
+
+      groups.group_list[find_group].channels[
+        find_channel
+      ].channel_members.splice(find_member, 1);
+
+      console.log(
+        groups.group_list[find_group].channels[find_channel].channel_members
+      );
+      res.send(groups);
+      json = JSON.stringify(groups);
+      fs.writeFile("groups.json", json, "utf-8", function(err) {
+        if (err) throw err;
+      });
+    });
+  });
+
+  // Create channel
   app.post("/channel", function(req, res) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
@@ -52,6 +105,7 @@ module.exports = function(app, path) {
     });
   });
 
+  // Create new group
   app.post("/groups", function(req, res) {
     var new_group = {};
 
@@ -103,6 +157,7 @@ module.exports = function(app, path) {
     });
   });
 
+  // Add member to group
   app.post("/addmember", function(req, res) {
     // console.log(server.groups);
 
@@ -145,6 +200,7 @@ module.exports = function(app, path) {
     });
   });
 
+  // Remove  a group
   app.post("/removegroup", function(req, res) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
@@ -168,6 +224,7 @@ module.exports = function(app, path) {
     });
   });
 
+  // Remove a member from group
   app.post("/removemember", function(req, res) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       var check = {};
@@ -229,6 +286,7 @@ module.exports = function(app, path) {
     });
   });
 
+  // Create new a channel
   app.post("/channels", function(req, res) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
@@ -282,6 +340,7 @@ module.exports = function(app, path) {
     });
   });
 
+  // Add a group memeber to channel
   app.post("/addUserToChannel", function(req, res) {
     console.log(req.body.channelname);
     console.log(req.body.groupname);
@@ -322,6 +381,34 @@ module.exports = function(app, path) {
         if (err) throw err;
       });
       res.send(check);
+    });
+  });
+
+  // Remove a channel
+  app.post("/removechannel", function(req, res) {
+    fs.readFile("groups.json", "utf-8", function(err, data) {
+      if (err) throw err;
+      groups = JSON.parse(data);
+
+      var find_group = groups.group_list
+        .map(name => {
+          return name.group_name;
+        })
+        .indexOf(req.body.groupname);
+
+      var find_channel = groups.group_list[find_group].channels
+        .map(channel => {
+          return channel.channel_name;
+        })
+        .indexOf(req.body.channelname);
+
+      groups.group_list[find_group].channels.splice(find_channel, 1);
+      console.log(groups.group_list[find_group].channels);
+
+      json = JSON.stringify(groups);
+      fs.writeFile("groups.json", json, "utf-8", function(err) {
+        if (err) throw err;
+      });
     });
   });
 };

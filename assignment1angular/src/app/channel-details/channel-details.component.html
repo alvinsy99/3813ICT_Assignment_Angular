@@ -1,6 +1,17 @@
 <div class="container">
   <h3 class=" text-center">
     "{{ channel_name }}" channel in "{{ group_name }}"
+    <button
+      *ngIf="
+        session.email == 'a-user@email.com' ||
+        group.group_admin == session.username ||
+        group.group_assist_1 == session.username ||
+        group.group_assist_2 == session.username
+      "
+      (click)="removeChannel(group_name, channel_name)"
+    >
+      Remove this channel
+    </button>
   </h3>
   <div class="messaging">
     <div class="inbox_msg">
@@ -14,12 +25,54 @@
               <div class="chat_people">
                 <div class="chat_ib">
                   <li>
-                    <h5>{{ member }}</h5>
+                    <h5>
+                      {{ member }}
+                      <p *ngIf="session.username == member">(you are online)</p>
+                      <span class="chat_date"
+                        ><button
+                          *ngIf="
+                            session.email == 'a-user@email.com' ||
+                            group.group_admin == session.username ||
+                            group.group_assist_1 == session.username ||
+                            group.group_assist_2 == session.username
+                          "
+                          (click)="
+                            removeMember(member, group_name, channel_name)
+                          "
+                        >
+                          Remove user '{{ member }}''
+                        </button></span
+                      >
+                    </h5>
                   </li>
                 </div>
               </div>
             </div>
           </ul>
+          <div
+            id="chat_people"
+            *ngIf="
+              session.email == 'a-user@email.com' ||
+              group.group_admin == session.username ||
+              group.group_assist_1 == session.username ||
+              group.group_assist_2 == session.username
+            "
+          >
+            Add user
+
+            <select
+              name="selectedUserChannel"
+              [(ngModel)]="selectedUserChannel"
+            >
+              <option *ngFor="let member of group.members" [ngValue]="member">{{
+                member
+              }}</option>
+            </select>
+            <input name="selectedChannel" [value]="group_name" hidden />
+            <button (click)="addUserToChannel(group_name, channel_name)">
+              Add
+            </button>
+          </div>
         </div>
       </div>
       <div class="mesgs">

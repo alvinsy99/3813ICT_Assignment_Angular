@@ -106,4 +106,25 @@ export class LoginServiceService {
       groupname: groupname
     });
   }
+
+  getGroupByName(groupname: string) {
+    return this.http.post<any>(this.backend + "/getgroupbyname", {
+      groupname: groupname
+    });
+  }
+
+  removeUserChannel(member: string, groupname: string, channelname: string) {
+    return this.http.post<any>(this.backend + "/removeuserchannel", {
+      member: member,
+      groupname: groupname,
+      channelname: channelname
+    });
+  }
+
+  removeChannel(groupname: string, channelname: string) {
+    return this.http.post<any>(this.backend + "/removechannel", {
+      groupname: groupname,
+      channelname: channelname
+    });
+  }
 }

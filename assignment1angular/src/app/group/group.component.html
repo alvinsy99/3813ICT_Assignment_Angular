@@ -51,7 +51,7 @@
 
 <ul>
   <li *ngFor="let group of groups">
-    {{ group.group_name }}
+    <h2>{{ group.group_name }}</h2>
     <button
       *ngIf="
         group.group_admin == session.username ||
@@ -81,7 +81,6 @@
       <input
         [(ngModel)]="selectedGroup"
         name="selectedGroup"
-        [value]="group.group_name"
         [value]="group.group_name"
         hidden
       />
@@ -121,13 +120,18 @@
         </li>
       </ol>
     </ol>
-    <p></p>
+
     <ul>
       <li *ngFor="let channel of group.channels">
-        {{ channel.channel_name }} ({{ channel.channel_members }})
+        <a
+          [routerLink]="['/channel', group.group_name, channel.channel_name]"
+          *ngIf="channel.channel_members.indexOf(session.username) !== -1"
+        >
+          {{ channel.channel_name }} ({{ channel.channel_members }})
+        </a>
       </li>
     </ul>
-    <p>
+    <!-- <p>
       Add {{ selectedUserChannel }} to {{ selectedChannel }} channel
       <br />
       <select name="selectedUserChannel" [(ngModel)]="selectedUserChannel">
@@ -142,18 +146,26 @@
             {{ channel.channel_name }}
           </button></option
         >
-      </select>
+      </select> -->
 
-      <!-- Button to add user to channel -->
-      <button (click)="addUserToChannel(group.group_name)">
+    <!-- Button to add user to channel -->
+    <!-- <button (click)="addUserToChannel(group.group_name)">
         Add
       </button>
-      <a [routerLink]="['/channel', 'nnnn', 'mmmm']">Go to mmmm channel</a>
+    </p> -->
+    <p
+      *ngIf="
+        group.group_admin == session.username ||
+        group.group_assist_1 == session.username ||
+        group.group_assist_2 == session.username ||
+        session.email == 'a-user@mail.com'
+      "
+    >
+      <input [(ngModel)]="channelName" name="channelName" type="input" />
+      <button (click)="createChannel(group.group_name, session.username)">
+        Create channel
+      </button>
     </p>
-    <input [(ngModel)]="channelName" name="channelName" type="input" />
-    <button (click)="createChannel(group.group_name, session.username)">
-      Create channel
-    </button>
   </li>
 </ul>
 
