@@ -23,6 +23,7 @@ export class RemoveUserComponent implements OnInit {
     });
   }
 
+  // remove a user with their email passed
   removeUser(email: string) {
     console.log(email);
     if (email !== "a-user@mail.com") {
@@ -41,6 +42,7 @@ export class RemoveUserComponent implements OnInit {
     }
   }
 
+  // grand super role to user
   grandSuper(email: string) {
     this.loginService.grandSuper(email).subscribe(data => {
       if (data == false) {

@@ -35,11 +35,15 @@ module.exports = function(app, path) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
       groups = JSON.parse(data);
+
+      // find group in the group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
+
+      // return that index object
       res.send(groups.group_list[find_group]);
     });
   });
@@ -50,22 +54,27 @@ module.exports = function(app, path) {
       if (err) throw err;
       groups = JSON.parse(data);
 
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
 
+      // find channels in the previous group index
       var find_channel = groups.group_list[find_group].channels
         .map(name => {
           return name.channel_name;
         })
         .indexOf(req.body.channelname);
 
+      // find the user in the channel index
+      // based on the last 2 searches
       var find_member = groups.group_list[find_group].channels[
         find_channel
       ].channel_members.indexOf(req.body.member);
 
+      // remove that user from channel
       groups.group_list[find_group].channels[
         find_channel
       ].channel_members.splice(find_member, 1);
@@ -81,24 +90,28 @@ module.exports = function(app, path) {
     });
   });
 
-  // Create channel
+  // Retrive a specfic channel
   app.post("/channel", function(req, res) {
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
       groups = JSON.parse(data);
 
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
       // console.log(groups.group_list[find_group].channels);
+
+      // find channel based on group index
       var find_channel = groups.group_list[find_group].channels
         .map(channel => {
           return channel.channel_name;
         })
         .indexOf(req.body.channelname);
 
+      // Return channel object
       var current = groups.group_list[find_group].channels[find_channel];
       console.log(groups.group_list[find_group].channels[find_channel]);
       res.send(current);
@@ -126,12 +139,15 @@ module.exports = function(app, path) {
       groups = JSON.parse(data);
       console.log(groups);
 
+      // find group index in group_list array
       var exist_name = groups.group_list
         .map(function(name) {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
 
+      // if the group name is not yet existed
+      // then create
       if (exist_name == -1) {
         new_group.group_name = req.body.groupname;
         new_group.group_admin = req.body.groupadmin;
@@ -171,6 +187,7 @@ module.exports = function(app, path) {
       groups = JSON.parse(data);
       console.log(req.body.groupname);
 
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
@@ -178,6 +195,7 @@ module.exports = function(app, path) {
         .indexOf(req.body.groupname);
       console.log(find_group);
       if (find_group !== -1) {
+        // Find user in the group index
         var find_user = groups.group_list[find_group].members
           .map(mems => {
             return mems;
@@ -185,6 +203,9 @@ module.exports = function(app, path) {
           .indexOf(req.body.username);
       }
       console.log(find_user);
+
+      // If both are -1 (means they are not exist)
+      // then create
       if (find_user == -1 && find_group !== -1) {
         groups.group_list[find_group].members.push(req.body.username);
         json = JSON.stringify(groups);
@@ -207,6 +228,7 @@ module.exports = function(app, path) {
       groups = JSON.parse(data);
       console.log(groups);
 
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
@@ -215,6 +237,7 @@ module.exports = function(app, path) {
 
       console.log(find_group);
 
+      // Remove the group object
       groups.group_list.splice(find_group, 1);
 
       json = JSON.stringify(groups);
@@ -233,12 +256,15 @@ module.exports = function(app, path) {
       groups = JSON.parse(data);
       console.log(groups);
 
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
       console.log(find_group);
+
+      // find user index in the group index object
       var find_user = groups.group_list[find_group].members
         .map(mems => {
           return mems;
@@ -297,24 +323,29 @@ module.exports = function(app, path) {
       channel.channel_members = [];
       channel.channel_message = [];
       groups = JSON.parse(data);
+
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
-      console.log(groups.group_list);
-      console.log(groups.group_list[find_group].channels);
-      console.log(groups.group_list[find_group].hasOwnProperty("channels"));
 
       // console.log(groups.group_list[find_group]["channels"]);
+
+      // Check if the group index already had channel key
+      // If do which means the channels might have been created before
+      // If not then create the channel along with 'channels' key
       if (groups.group_list[find_group].hasOwnProperty("channels")) {
+        // if 'channel' key exist then check for channel name
         var exist_channel_name = groups.group_list[find_group].channels
           .map(channel => {
             return channel.channel_name;
           })
           .indexOf(req.body.channelname);
 
-        if (exist_channel_name == -1) {
+        // if channel is not yet created then create
+        if (exist_channel_name == -1 || req.body.channelname !== "") {
           check.confirmation = true;
           channel.channel_name = req.body.channelname;
           channel.channel_members.push(req.body.member);
@@ -322,7 +353,7 @@ module.exports = function(app, path) {
         } else {
           check.confirmation = false;
         }
-      } else {
+      } else if (req.body.channelname !== "") {
         channel.channel_name = req.body.channelname;
         channel.channel_members.push(req.body.member);
         groups.group_list[find_group].channels = new Array(channel);
@@ -330,7 +361,10 @@ module.exports = function(app, path) {
 
         console.log(groups.group_list[find_group]);
         console.log(groups.group_list[find_group].channels);
+      } else {
+        check.confirmation = false;
       }
+
       json = JSON.stringify(groups);
       fs.writeFile("groups.json", json, "utf-8", function(err) {
         if (err) throw err;
@@ -351,22 +385,28 @@ module.exports = function(app, path) {
       check = {};
       check.confirmation = false;
       groups = JSON.parse(data);
+
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
       // console.log(groups.group_list[find_group].channels);
+
+      // find channel index in the group index
       var find_channel = groups.group_list[find_group].channels
         .map(channel => {
           return channel.channel_name;
         })
         .indexOf(req.body.channelname);
 
+      // find the member in the channel index
       var find_member_in_group = groups.group_list[find_group].channels[
         find_channel
       ].channel_members.indexOf(req.body.member);
 
+      // If member is not in that channel yet then add
       if (find_member_in_group == -1 && req.body.member !== "") {
         groups.group_list[find_group].channels[
           find_channel
@@ -390,18 +430,21 @@ module.exports = function(app, path) {
       if (err) throw err;
       groups = JSON.parse(data);
 
+      // find group index in group_list array
       var find_group = groups.group_list
         .map(name => {
           return name.group_name;
         })
         .indexOf(req.body.groupname);
 
+      // find the channel in the group index object
       var find_channel = groups.group_list[find_group].channels
         .map(channel => {
           return channel.channel_name;
         })
         .indexOf(req.body.channelname);
 
+      // Remove that channel
       groups.group_list[find_group].channels.splice(find_channel, 1);
       console.log(groups.group_list[find_group].channels);
 

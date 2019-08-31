@@ -12,17 +12,10 @@ interface User {
 })
 export class LoginServiceService {
   backend = "http://localhost:3000";
-  @Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
+  isLoggedIn = false;
   constructor(private http: HttpClient) {}
-  successlogin(email: string, password: string) {
-    if (this.logIn(email, password)) {
-      this.getLoggedInName.emit(email);
-      return true;
-    } else {
-      this.getLoggedInName.emit("Log In");
-      return false;
-    }
-  }
+
+  // Route for logging in
   logIn(email: string, password: string) {
     return this.http.post<User>(this.backend + "/api/auth", {
       email: email,
@@ -30,6 +23,7 @@ export class LoginServiceService {
     });
   }
 
+  // Route for create new user
   createAccountService(
     email: string,
     username: string,
@@ -46,20 +40,24 @@ export class LoginServiceService {
     });
   }
 
+  // Retrieve all users
   retrieveUser() {
     return this.http.get<any>(this.backend + "/getusers");
   }
 
+  // Remove user route
   removeUser(email: string) {
     return this.http.post<any>(this.backend + "/api/delete", {
       email: email
     });
   }
 
+  // Retrieve all groups
   getGroups() {
     return this.http.get<any>(this.backend + "/groups");
   }
 
+  // create group with parameters
   createGroups(
     groupname: string,
     groupadmin: string,
@@ -74,6 +72,7 @@ export class LoginServiceService {
     });
   }
 
+  // add new member to a group
   addMember(username: string, groupname: string) {
     return this.http.post<any>(this.backend + "/addmember", {
       username: username,
@@ -81,12 +80,14 @@ export class LoginServiceService {
     });
   }
 
+  // remove a specific group
   removeGroup(groupname: string) {
     return this.http.post<any>(this.backend + "/removegroup", {
       groupname: groupname
     });
   }
 
+  // remove a member from a group
   removeMember(membername: string, groupname: string) {
     return this.http.post<any>(this.backend + "/removemember", {
       membername: membername,
@@ -94,6 +95,7 @@ export class LoginServiceService {
     });
   }
 
+  // create new channel
   createChannel(channelname: string, groupname: string, member: string) {
     return this.http.post<any>(this.backend + "/channels", {
       channelname: channelname,
@@ -102,6 +104,7 @@ export class LoginServiceService {
     });
   }
 
+  // add non-existed user to channel
   addUserToChannel(channelname: string, groupname: string, member: string) {
     return this.http.post<any>(this.backend + "/addUserToChannel", {
       channelname: channelname,
@@ -110,6 +113,7 @@ export class LoginServiceService {
     });
   }
 
+  // retrieve a specific channel
   getChannel(channelname: string, groupname: string) {
     return this.http.post<any>(this.backend + "/channel", {
       channelname: channelname,
@@ -117,12 +121,14 @@ export class LoginServiceService {
     });
   }
 
+  // retrieve group by its name
   getGroupByName(groupname: string) {
     return this.http.post<any>(this.backend + "/getgroupbyname", {
       groupname: groupname
     });
   }
 
+  // remove a user in a group
   removeUserChannel(member: string, groupname: string, channelname: string) {
     return this.http.post<any>(this.backend + "/removeuserchannel", {
       member: member,
@@ -131,6 +137,7 @@ export class LoginServiceService {
     });
   }
 
+  // remove a channel
   removeChannel(groupname: string, channelname: string) {
     return this.http.post<any>(this.backend + "/removechannel", {
       groupname: groupname,
@@ -138,6 +145,8 @@ export class LoginServiceService {
     });
   }
 
+  // passing email to grand
+  // super admin role
   grandSuper(email: string) {
     return this.http.post<any>(this.backend + "/grandsuper", {
       email: email

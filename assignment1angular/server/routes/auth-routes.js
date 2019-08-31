@@ -35,6 +35,7 @@ module.exports = function(app, path) {
     fs.readFile("users.json", "utf-8", function(err, data) {
       if (err) throw err;
       valid_user = JSON.parse(data);
+
       // check for email and password in the same object
       for (let i = 0; i < valid_user.valid_user_list.length; i++) {
         if (
@@ -72,18 +73,23 @@ module.exports = function(app, path) {
     fs.readFile("users.json", "utf-8", function(err, data) {
       if (err) throw err;
       valid_user = JSON.parse(data);
+
+      // find whether email exist
       var exist_useremail = valid_user.valid_user_list
         .map(function(data) {
           return data.email;
         })
         .indexOf(req.body.email);
 
+      // find whether username exist
       var exist_username = valid_user.valid_user_list
         .map(function(data) {
           return data.username;
         })
         .indexOf(req.body.username);
 
+      // If both are -1 (means there is not available yet)
+      // Then create
       if (exist_username == -1 && exist_useremail == -1) {
         customer.valid = true;
         customer.email = req.body.email;
@@ -144,17 +150,21 @@ module.exports = function(app, path) {
     res.send(data);
   });
 
+  // Grand super admin role
   app.post("/grandsuper", function(req, res) {
     fs.readFile("users.json", "utf-8", function(err, data) {
       if (err) throw err;
 
       valid_user = JSON.parse(data);
 
+      // Find user index
       var user_index = valid_user.valid_user_list
         .map(function(data) {
           return data.email;
         })
         .indexOf(req.body.email);
+
+      // Check if user is already super admin
       if (valid_user.valid_user_list[user_index].isSuperAdmin == true) {
         res.send(false);
       } else {

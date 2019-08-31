@@ -3,12 +3,13 @@
     "{{ channel_name }}" channel in "{{ group_name }}"
     <button
       *ngIf="
-        session.email == 'a-user@email.com' ||
+        session.isSuperAdmin == true ||
         group.group_admin == session.username ||
         group.group_assist_1 == session.username ||
         group.group_assist_2 == session.username
       "
       (click)="removeChannel(group_name, channel_name)"
+      class="btn btn-danger btn-sm"
     >
       Remove this channel
     </button>
@@ -34,10 +35,11 @@
                         </p>
                         <button
                           *ngIf="
-                            session.email == 'a-user@email.com' ||
+                            session.isSuperAdmin == true ||
                             group.group_admin == session.username ||
                             group.group_assist_1 == session.username ||
-                            group.group_assist_2 == session.username
+                            group.group_assist_2 == session.username ||
+                            session.username !== member
                           "
                           (click)="
                             removeMember(member, group_name, channel_name)
@@ -55,7 +57,7 @@
           <div
             id="chat_people"
             *ngIf="
-              session.email == 'a-user@email.com' ||
+              session.isSuperAdmin == true ||
               group.group_admin == session.username ||
               group.group_assist_1 == session.username ||
               group.group_assist_2 == session.username
@@ -72,7 +74,10 @@
               }}</option>
             </select>
             <input name="selectedChannel" [value]="group_name" hidden />
-            <button (click)="addUserToChannel(group_name, channel_name)">
+            <button
+              (click)="addUserToChannel(group_name, channel_name)"
+              class="btn btn-success btn-sm"
+            >
               Add
             </button>
           </div>

@@ -21,5 +21,7 @@ export class AccountComponent implements OnInit {
     this.loginService.getGroups().subscribe(data => {
       this.groups = data;
     });
+
+    // window.location.reload();
   }
 }

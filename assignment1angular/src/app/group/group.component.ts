@@ -13,6 +13,7 @@ export class GroupComponent implements OnInit {
   groupname = "";
   assist1 = "";
   assist2 = "";
+  // retrieve current session
   session = JSON.parse(sessionStorage.getItem("sessionUser"));
   groups = [];
   users = [];
@@ -43,6 +44,8 @@ export class GroupComponent implements OnInit {
     console.log(this.session);
   }
 
+  // function is called when 'create group'
+  // button is clicked
   createGroup(groupadmin: string) {
     if (this.groupname !== "" && this.assist1 !== "") {
       if (this.assist1 == this.assist2) {
@@ -73,6 +76,8 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  // function is called when 'add' button
+  // for member section is clicked
   addMember(groupn: string) {
     // console.log(this.user_email);
 
@@ -91,6 +96,8 @@ export class GroupComponent implements OnInit {
     });
   }
 
+  // function is called when 'remove group name'
+  // is clicked
   removeGroup(groupname: string) {
     if (confirm("Are you sure to delete " + groupname)) {
       this.loginService.removeGroup(groupname).subscribe();
@@ -101,6 +108,8 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  // function is called when 'remove member' button
+  // is clicked next to each member
   removeMember(membername: string, groupname: string) {
     if (
       confirm("Are you sure to remove " + membername + " from " + groupname)
@@ -119,6 +128,8 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  // function is called when 'create channel' button
+  // is clicked when the channel is defined
   createChannel(groupname: string, membername: string) {
     console.log(groupname);
     console.log(membername);
@@ -134,7 +145,7 @@ export class GroupComponent implements OnInit {
             console.log(data);
           });
 
-          alert(this.channelName + "is created!!");
+          alert(this.channelName + " is created!!");
           this.channelName = "";
         }
       });

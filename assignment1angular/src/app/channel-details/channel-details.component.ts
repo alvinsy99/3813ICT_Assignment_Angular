@@ -23,10 +23,13 @@ export class ChannelDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Retrieve the parameters from the url
     this.activatedroute.params.subscribe((params: Params) => {
       this.group_name = params.gname;
       this.channel_name = params.cname; // (+) converts string 'id' to a number
     });
+
+    // Retrieve a channel object
     this.loginService
       .getChannel(this.channel_name, this.group_name)
       .subscribe(data => {
@@ -42,6 +45,9 @@ export class ChannelDetailsComponent implements OnInit {
 
   getGroupByName() {}
 
+  // Remove a member from channel
+  // function is called when "remove user" button
+  // is clicked next to each member
   removeMember(membername: string, groupname: string, channelname: string) {
     if (
       confirm("Are you sure to remove " + membername + " from " + groupname)
@@ -49,9 +55,11 @@ export class ChannelDetailsComponent implements OnInit {
       this.loginService
         .removeUserChannel(membername, groupname, channelname)
         .subscribe(data => {
+          // if the return data is false
           if (data.confirmation == false) {
             alert("Cannot remove the group admin");
           } else {
+            // reload the data
             this.loginService
               .getChannel(this.channel_name, this.group_name)
               .subscribe(data => {
@@ -63,14 +71,18 @@ export class ChannelDetailsComponent implements OnInit {
     }
   }
 
+  // function is called when 'remove channel' button
+  // is clicked next to the channel name
   removeChannel(groupname: string, channelname: string) {
     if (confirm("Are you sure to remove " + channelname + " channel")) {
       this.loginService.removeChannel(groupname, channelname).subscribe();
 
-      this.router.navigateByUrl("/account");
+      this.router.navigateByUrl("/group");
     }
   }
 
+  // function is called when 'add' button
+  // is clicked when the user name is specify
   addUserToChannel(groupname: string, channelname: string) {
     this.loginService
       .addUserToChannel(channelname, groupname, this.selectedUserChannel)

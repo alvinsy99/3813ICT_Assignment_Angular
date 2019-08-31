@@ -1,5 +1,5 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Assignment 1</a>
 
   <div class="collapse navbar-collapse" id="navbarText">
@@ -17,27 +17,93 @@
           >Profile</a
         >
       </li>
+
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          id="navbarDropdownMenuLink"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          >Dropdown</a
+        >
+        <div
+          class="dropdown-menu dropdown-primary"
+          aria-labelledby="navbarDropdownMenuLink"
+        >
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
     </ul>
   </div>
   <div>
     <span class="navbar-text"
-      ><a
-        class="nav-item nav-link"
-        *ngIf="data === null; else loggedOut"
-        routerLink="/login"
-        (click)="checkLogIn()"
+      ><a class="nav-item nav-link" routerLink="/login" (click)="checkLogIn()"
         >Log In</a
       ></span
     >
 
-    <ng-template #loggedOut
-      ><span class="navbar-text"
-        ><a class="nav-item nav-link" routerLink="/login" (click)="logOut()"
-          >Log Out</a
-        ></span
-      ></ng-template
+    <span class="navbar-text"
+      ><a class="nav-item nav-link" routerLink="/login" (click)="logOut()"
+        >Log Out</a
+      ></span
     >
   </div>
-</nav>
+</nav> -->
 
+<!--Navbar-->
+<nav id="nav" class="navbar navbar-expand-lg navbar-dark primary-color">
+  <!-- Navbar brand -->
+  <a class="navbar-brand" href="#">{{ data.username }}</a>
+
+  <!-- Collapse button -->
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#basicExampleNav"
+    aria-controls="basicExampleNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Collapsible content -->
+  <div class="collapse navbar-collapse" id="basicExampleNav">
+    <!-- Links -->
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"
+          >Home
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/account" (click)="checkProfile()"
+          >Profile</a
+        >
+      </li>
+
+      <!-- Dropdown -->
+    </ul>
+    <!-- Links -->
+
+    <span class="navbar-text"
+      ><a class="nav-item nav-link" routerLink="/login" (click)="checkLogIn()"
+        >Log In</a
+      ></span
+    >
+
+    <span class="navbar-text"
+      ><a class="nav-item nav-link" routerLink="/login" (click)="logOut()"
+        >Log Out</a
+      ></span
+    >
+  </div>
+  <!-- Collapsible content -->
+</nav>
+<!--/.Navbar-->
 <router-outlet></router-outlet>

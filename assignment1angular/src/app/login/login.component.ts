@@ -12,14 +12,23 @@ export class LoginComponent implements OnInit {
   email = "";
   password = "";
   title = "Login";
+  data = JSON.parse(sessionStorage.getItem("sessionUser"));
 
   constructor(
     private router: Router,
     private loginService: LoginServiceService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.data != null || this.data != undefined) {
+      this.router.navigateByUrl("/account");
+    } else {
+      this.router.navigateByUrl("/login");
+    }
+  }
 
+  // Log In function called when the
+  // 'Sign In' button is clicked
   logIn() {
     console.log(this.email);
     console.log(this.password);
@@ -32,6 +41,7 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem("sessionUser", dataJSON);
         localStorage.setItem("localUser", dataJSON);
         this.router.navigateByUrl("/account");
+        document.location.reload();
       } else {
         alert("Invalid username or password");
         this.email = "";
