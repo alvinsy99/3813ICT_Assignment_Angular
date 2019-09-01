@@ -100,11 +100,14 @@ export class GroupComponent implements OnInit {
   // is clicked
   removeGroup(groupname: string) {
     if (confirm("Are you sure to delete " + groupname)) {
-      this.loginService.removeGroup(groupname).subscribe();
-      this.loginService.getGroups().subscribe(data => {
-        this.groups = data;
+      this.loginService.removeGroup(groupname).subscribe(data => {
+        this.loginService.getGroups().subscribe(data => {
+          this.groups = data;
+        });
+        alert(groupname + " has been removed");
       });
-      alert(groupname + " has been removed");
+
+      // this.router.navigateByUrl("/account");
     }
   }
 

@@ -223,6 +223,7 @@ module.exports = function(app, path) {
 
   // Remove  a group
   app.post("/removegroup", function(req, res) {
+    data = false;
     fs.readFile("groups.json", "utf-8", function(err, data) {
       if (err) throw err;
       groups = JSON.parse(data);
@@ -239,12 +240,13 @@ module.exports = function(app, path) {
 
       // Remove the group object
       groups.group_list.splice(find_group, 1);
-
+      data = true;
       json = JSON.stringify(groups);
       fs.writeFile("groups.json", json, "utf-8", function(err) {
         if (err) throw err;
       });
     });
+    res.send(data);
   });
 
   // Remove a member from group
@@ -254,7 +256,6 @@ module.exports = function(app, path) {
       check.confirmation = false;
       if (err) throw err;
       groups = JSON.parse(data);
-      console.log(groups);
 
       // find group index in group_list array
       var find_group = groups.group_list
@@ -271,7 +272,7 @@ module.exports = function(app, path) {
         })
         .indexOf(req.body.membername);
       console.log(find_user);
-
+      console.log(groups.group_list[find_group].members);
       // Check if user being removing is the group assist 1
       if (req.body.membername == groups.group_list[find_group].group_assist_1) {
         if (groups.group_list[find_group].group_assist_2 !== "") {
@@ -293,17 +294,18 @@ module.exports = function(app, path) {
         } else {
           check.confirmation = false;
         }
+      }
+      // Group admin cannot be removed
+      else if (
+        req.body.membername == groups.group_list[find_group].group_admin
+      ) {
+        check.confirmation = false;
       } else {
         check.confirmation = true;
         groups.group_list[find_group].members.splice(find_user, 1);
       }
 
-      // Group admin cannot be removed
-      if (req.body.membername == groups.group_list[find_group].group_admin) {
-        check.confirmation = false;
-      }
-
-      console.log(groups.group_list.members);
+      console.log(groups.group_list[find_group].members);
       json = JSON.stringify(groups);
       fs.writeFile("groups.json", json, "utf-8", function(err) {
         if (err) throw err;

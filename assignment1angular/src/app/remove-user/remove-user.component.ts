@@ -29,10 +29,11 @@ export class RemoveUserComponent implements OnInit {
     if (email !== "a-user@mail.com") {
       this.loginService.removeUser(email).subscribe(data => {
         // this.router.navigateByUrl("/account");
-        alert(email + " is removed!!!");
+
         this.loginService.retrieveUser().subscribe(data => {
           this.users = data;
         });
+        alert(email + " is removed!!!");
       }),
         (error: HttpErrorResponse) => {
           alert("Error" + error);

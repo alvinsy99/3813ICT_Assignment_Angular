@@ -77,7 +77,7 @@ export class ChannelDetailsComponent implements OnInit {
     if (confirm("Are you sure to remove " + channelname + " channel")) {
       this.loginService.removeChannel(groupname, channelname).subscribe();
 
-      this.router.navigateByUrl("/group");
+      this.router.navigateByUrl("/account");
     }
   }
 
