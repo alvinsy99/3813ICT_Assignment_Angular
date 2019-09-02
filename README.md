@@ -1,6 +1,6 @@
 # 3813ICT_Assignment_1
 
-
+### My github link: https://github.com/alvinsy99/3813ICT_Assignment_1
 ## Version Control (Github)
 Github is one of the largest communities that provide software development version control using Git.
 This assignment applies git version control at the point where it has been implemented with creating new user, remove existing user. 
