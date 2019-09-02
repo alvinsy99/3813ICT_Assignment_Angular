@@ -136,22 +136,25 @@ export class GroupComponent implements OnInit {
   createChannel(groupname: string, membername: string) {
     console.log(groupname);
     console.log(membername);
+    if (this.channelName === "") {
+      alert("Channel name cannot be blank!!!");
+    } else {
+      this.loginService
+        .createChannel(this.channelName, groupname, membername)
+        .subscribe(data => {
+          if (data.confirmation == false) {
+            alert("Channel name existed");
+          } else {
+            this.loginService.getGroups().subscribe(data => {
+              this.groups = data;
+              console.log(data);
+            });
 
-    this.loginService
-      .createChannel(this.channelName, groupname, membername)
-      .subscribe(data => {
-        if (data.confirmation == false) {
-          alert("Channel name existed");
-        } else {
-          this.loginService.getGroups().subscribe(data => {
-            this.groups = data;
-            console.log(data);
-          });
-
-          alert(this.channelName + " is created!!");
-          this.channelName = "";
-        }
-      });
+            alert(this.channelName + " is created!!");
+            this.channelName = "";
+          }
+        });
+    }
   }
 
   // addUserToChannel(groupname: string) {

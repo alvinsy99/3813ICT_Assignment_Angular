@@ -31,26 +31,29 @@ export class RegisterComponent implements OnInit {
     console.log(this.groupadmin);
     console.log(this.superadmin);
     console.log(this.passwordRegister);
-
-    this.loginService
-      .createAccountService(
-        this.emailRegister,
-        this.usernameRegister,
-        this.groupadmin,
-        this.superadmin,
-        this.passwordRegister
-      )
-      .subscribe(data => {
-        if (data.valid == false) {
-          alert("Email or Username is already taken");
-          this.emailRegister = "";
-          this.usernameRegister = "";
-          this.passwordRegister = "";
-        } else {
-          this.router.navigateByUrl("/account");
-          alert("User has been registered!!!");
-        }
-      });
+    if (this.emailRegister === "" && this.usernameRegister === "") {
+      alert("Email and User name cannot be blank");
+    } else {
+      this.loginService
+        .createAccountService(
+          this.emailRegister,
+          this.usernameRegister,
+          this.groupadmin,
+          this.superadmin,
+          this.passwordRegister
+        )
+        .subscribe(data => {
+          if (data.valid == false) {
+            alert("Email or Username is already taken");
+            this.emailRegister = "";
+            this.usernameRegister = "";
+            this.passwordRegister = "";
+          } else {
+            this.router.navigateByUrl("/account");
+            alert("User has been registered!!!");
+          }
+        });
+    }
 
     // this.loginService.retrieveUser().subscribe(data => {
     //   saveAs(JSON.stringify(data), "valid_users.json");
