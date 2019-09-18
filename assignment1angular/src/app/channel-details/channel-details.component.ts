@@ -33,14 +33,14 @@ export class ChannelDetailsComponent implements OnInit {
     this.loginService
       .getChannel(this.channel_name, this.group_name)
       .subscribe(data => {
+        console.log("HERE");
+        console.log(data);
         this.channelMembers = data.channel_members;
       });
     this.loginService.getGroupByName(this.group_name).subscribe(data => {
-      this.group = data;
-      console.log(this.group.group_admin);
+      this.group = data[0];
+      console.log(this.group);
     });
-
-    // console.log(this.channel.channel_name);
   }
 
   getGroupByName() {}
@@ -56,7 +56,7 @@ export class ChannelDetailsComponent implements OnInit {
         .removeUserChannel(membername, groupname, channelname)
         .subscribe(data => {
           // if the return data is false
-          if (data.confirmation == false) {
+          if (data == false) {
             alert("Cannot remove the group admin");
           } else {
             // reload the data
@@ -84,21 +84,25 @@ export class ChannelDetailsComponent implements OnInit {
   // function is called when 'add' button
   // is clicked when the user name is specify
   addUserToChannel(groupname: string, channelname: string) {
-    this.loginService
-      .addUserToChannel(channelname, groupname, this.selectedUserChannel)
-      .subscribe(data => {
-        if (data.confirmation == false) {
-          alert("User already in " + channelname + " channel");
-        } else {
-          this.loginService
-            .getChannel(this.channel_name, this.group_name)
-            .subscribe(data => {
-              this.channelMembers = data.channel_members;
-            });
+    if (this.selectedUserChannel == "") {
+      alert("Cannot be blank");
+    } else {
+      this.loginService
+        .addUserToChannel(channelname, groupname, this.selectedUserChannel)
+        .subscribe(data => {
+          if (data == false) {
+            alert("User already in " + channelname + " channel");
+          } else {
+            this.loginService
+              .getChannel(this.channel_name, this.group_name)
+              .subscribe(data => {
+                this.channelMembers = data.channel_members;
+              });
 
-          this.selectedUserChannel = "";
-          alert("Add user successfully");
-        }
-      });
+            this.selectedUserChannel = "";
+            alert("Add user successfully");
+          }
+        });
+    }
   }
 }

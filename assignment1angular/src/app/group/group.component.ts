@@ -33,8 +33,8 @@ export class GroupComponent implements OnInit {
     console.log("FROM GROUP COMPONENT");
     this.click.emit();
     this.loginService.getGroups().subscribe(data => {
-      this.groups = data;
       console.log(data);
+      this.groups = data;
     });
 
     this.loginService.retrieveUser().subscribe(data => {
@@ -55,19 +55,18 @@ export class GroupComponent implements OnInit {
           .createGroups(this.groupname, groupadmin, this.assist1, this.assist2)
           .subscribe(data => {
             console.log(data);
-            if (data.confirm === false) {
+            if (data === false) {
               alert("Group name already exist");
               this.groupname = "";
             } else {
-              this.loginService.getGroups().subscribe(data => {
-                this.groups = data;
-                console.log(data);
-              });
-
               alert(this.groupname + " is successfully created");
               this.groupname = "";
               this.assist1 = "";
               this.assist2 = "";
+              this.loginService.getGroups().subscribe(data => {
+                this.groups = data;
+                console.log(data);
+              });
             }
           });
       }
@@ -78,22 +77,24 @@ export class GroupComponent implements OnInit {
 
   // function is called when 'add' button
   // for member section is clicked
-  addMember(groupn: string) {
+  addMember(groupn: string, obID: string) {
     // console.log(this.user_email);
 
-    this.loginService.addMember(this.selectedUser, groupn).subscribe(data => {
-      if (data.confirmation == false) {
-        alert("User is already in that group");
-      } else {
-        this.loginService.getGroups().subscribe(data => {
-          this.groups = data;
-          console.log(data);
-        });
+    this.loginService
+      .addMember(this.selectedUser, groupn, obID)
+      .subscribe(data => {
+        if (data === false) {
+          alert("User is already in that group");
+        } else {
+          this.loginService.getGroups().subscribe(data => {
+            this.groups = data;
+            console.log(data);
+          });
 
-        alert(this.selectedUser + " is added to " + groupn);
-        this.selectedUser = "";
-      }
-    });
+          alert(this.selectedUser + " is added to " + groupn);
+          this.selectedUser = "";
+        }
+      });
   }
 
   // function is called when 'remove group name'
@@ -115,7 +116,8 @@ export class GroupComponent implements OnInit {
   // is clicked next to each member
   removeMember(membername: string, groupname: string) {
     if (
-      confirm("Are you sure to remove " + membername + " from " + groupname)
+      confirm("Are you sure to remove " + membername + " from " + groupname) &&
+      membername !== ""
     ) {
       this.loginService.removeMember(membername, groupname).subscribe(data => {
         if (data.confirmation == false) {
@@ -142,7 +144,7 @@ export class GroupComponent implements OnInit {
       this.loginService
         .createChannel(this.channelName, groupname, membername)
         .subscribe(data => {
-          if (data.confirmation == false) {
+          if (data == false) {
             alert("Channel name existed");
           } else {
             this.loginService.getGroups().subscribe(data => {

@@ -73,10 +73,11 @@ export class LoginServiceService {
   }
 
   // add new member to a group
-  addMember(username: string, groupname: string) {
+  addMember(username: string, groupname: string, obID: string) {
     return this.http.post<any>(this.backend + "/addmember", {
       username: username,
-      groupname: groupname
+      groupname: groupname,
+      obID: obID
     });
   }
 

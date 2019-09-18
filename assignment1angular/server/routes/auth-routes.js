@@ -20,7 +20,7 @@ module.exports = function(db, app) {
       });
     }
   });
-  console.log();
+
   app.get("/getusers", function(req, res) {
     // using mongodb
     userCollection.find({}).toArray((err, data) => {
@@ -48,11 +48,6 @@ module.exports = function(db, app) {
     customer.isSuperAdmin = false;
     customer.isGroupAdmin = false;
     customer.valid = false;
-    // customer.email = req.body.email;
-    // customer.password = req.body.password;
-    // customer.username = req.body.username;
-    // customer.birthday = req.body.birthday;
-    // customer.age = req.body.age;
 
     console.log(req.body.email);
 

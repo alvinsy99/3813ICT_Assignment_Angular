@@ -88,7 +88,7 @@ MongoClient.connect(
     //     }
     //   });
     require("./routes/auth-routes.js")(db, app);
-    // require("./routes/group-routes.js")(db, app);
+    require("./routes/group-routes.js")(db, app, ObjectID);
   }
 );
 // routes
