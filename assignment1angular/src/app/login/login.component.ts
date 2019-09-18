@@ -34,10 +34,11 @@ export class LoginComponent implements OnInit {
     console.log(this.password);
 
     this.loginService.logIn(this.email, this.password).subscribe(data => {
-      var dataJSON = JSON.stringify(data);
-      var dataEmailJSON = JSON.stringify(data);
+      var dataJSON = JSON.stringify(data[0]);
+      console.log(data[0]);
+      // var dataEmailJSON = JSON.stringify(data[0]);
 
-      if (data.valid == true) {
+      if ((data = true)) {
         sessionStorage.setItem("sessionUser", dataJSON);
         localStorage.setItem("localUser", dataJSON);
         this.router.navigateByUrl("/account");

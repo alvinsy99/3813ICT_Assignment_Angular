@@ -1,9 +1,33 @@
 var server = require("../server.js");
 var fs = require("fs");
 
-module.exports = function(app, path) {
+module.exports = function(db, app) {
   // retrieve all users
+  const userCollection = db.collection("users");
+  var admin_user = {
+    email: "a-user@mail.com",
+    username: "Super Admin A",
+    password: "123a",
+    isSuperAdmin: true,
+    isGroupAdmin: true,
+    valid: ""
+  };
+  userCollection.find({ email: "a-user@mail.com" }).count((err, count) => {
+    if (count == 0) {
+      userCollection.insertOne(admin_user, (err, dbres) => {
+        if (err) throw err;
+        console.log(dbres.insertCount);
+      });
+    }
+  });
+  console.log();
   app.get("/getusers", function(req, res) {
+    // using mongodb
+    userCollection.find({}).toArray((err, data) => {
+      res.send(data);
+      console.log(data);
+    });
+
     fs.readFile("users.json", "utf-8", function(err, data) {
       if (err) throw err;
 
@@ -32,26 +56,42 @@ module.exports = function(app, path) {
     // customer.age = req.body.age;
 
     console.log(req.body.email);
-    fs.readFile("users.json", "utf-8", function(err, data) {
-      if (err) throw err;
-      valid_user = JSON.parse(data);
 
-      // check for email and password in the same object
-      for (let i = 0; i < valid_user.valid_user_list.length; i++) {
-        if (
-          req.body.email == valid_user.valid_user_list[i].email &&
-          req.body.password == valid_user.valid_user_list[i].password
-        ) {
-          customer.valid = true;
-          customer.email = valid_user.valid_user_list[i].email;
-          customer.password = valid_user.valid_user_list[i].password;
-          customer.username = valid_user.valid_user_list[i].username;
-          customer.isSuperAdmin = valid_user.valid_user_list[i].isSuperAdmin;
-          customer.isGroupAdmin = valid_user.valid_user_list[i].isGroupAdmin;
-          res.send(customer);
+    userCollection
+      .find({ email: req.body.email, password: req.body.password })
+      .count((err, count) => {
+        if (count == 0) {
+          console.log("email or password is invalid");
+          res.send(false);
+        } else {
+          userCollection
+            .find({ email: req.body.email, password: req.body.password })
+            .limit(1)
+            .toArray((err, data) => {
+              res.send(data);
+            });
         }
-      }
-    });
+      });
+    // fs.readFile("users.json", "utf-8", function(err, data) {
+    //   if (err) throw err;
+    //   valid_user = JSON.parse(data);
+
+    //   // check for email and password in the same object
+    //   for (let i = 0; i < valid_user.valid_user_list.length; i++) {
+    //     if (
+    //       req.body.email == valid_user.valid_user_list[i].email &&
+    //       req.body.password == valid_user.valid_user_list[i].password
+    //     ) {
+    //       customer.valid = true;
+    //       customer.email = valid_user.valid_user_list[i].email;
+    //       customer.password = valid_user.valid_user_list[i].password;
+    //       customer.username = valid_user.valid_user_list[i].username;
+    //       customer.isSuperAdmin = valid_user.valid_user_list[i].isSuperAdmin;
+    //       customer.isGroupAdmin = valid_user.valid_user_list[i].isGroupAdmin;
+    //       res.send(customer);
+    //     }
+    //   }
+    // });
   });
 
   // user register handler

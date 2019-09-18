@@ -1,1 +1,1 @@
-{"valid_user_list":[{"email":"a-user@mail.com","username":"Super Admin A","password":"123a","isSuperAdmin":true,"isGroupAdmin":true,"valid":""}]}
+{"valid_user_list":[{"email":"a-user@mail.com","username":"Super Admin A","password":"123a","isSuperAdmin":true,"isGroupAdmin":true,"valid":""},{"email":"z-user@mail.com","password":"123z","username":"123z","isSuperAdmin":false,"isGroupAdmin":false,"valid":true},{"email":"x-user@mail.com","password":"123x","username":"123x","isSuperAdmin":false,"isGroupAdmin":false,"valid":true}]}

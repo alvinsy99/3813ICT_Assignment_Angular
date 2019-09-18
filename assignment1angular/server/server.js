@@ -63,6 +63,34 @@ app.use(express.static(path.join(__dirname, "../dist/assignment1angular")));
 const listen = require("../server/routes/listen.js");
 listen.listen(http, PORT);
 
+// MongoDB
+const MongoClient = require("mongodb").MongoClient;
+var ObjectID = require("mongodb").ObjectID;
+const url = "mongodb://localhost:27017";
+MongoClient.connect(
+  url,
+  { poolSize: 10, useNewUrlParser: true, useUnifiedTopology: true },
+  function(err, client) {
+    if (err) {
+      return console.log(err);
+    }
+
+    const db = client.db("assignment1database");
+    // const usercollectionserver = client.collection("users");
+    // usercollectionserver
+    //   .find({ email: "a-user@mail.com" })
+    //   .count((err, data) => {
+    //     if (count == 0) {
+    //       usercollectionserver.insertOne(admin_user, (err, dbres) => {
+    //         if (err) throw err;
+    //         console.log(dbres.insertCount);
+    //       });
+    //     }
+    //   });
+    require("./routes/auth-routes.js")(db, app);
+    // require("./routes/group-routes.js")(db, app);
+  }
+);
 // routes
-require("./routes/auth-routes.js")(app, path);
-require("./routes/group-routes.js")(app, path);
+// require("./routes/auth-routes.js")(app, path);
+// require("./routes/group-routes.js")(app, path);

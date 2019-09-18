@@ -17,7 +17,7 @@ export class LoginServiceService {
 
   // Route for logging in
   logIn(email: string, password: string) {
-    return this.http.post<User>(this.backend + "/api/auth", {
+    return this.http.post<any>(this.backend + "/api/auth", {
       email: email,
       password: password
     });
