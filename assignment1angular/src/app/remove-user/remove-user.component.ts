@@ -46,7 +46,7 @@ export class RemoveUserComponent implements OnInit {
   // grand super role to user
   grandSuper(email: string) {
     this.loginService.grandSuper(email).subscribe(data => {
-      if (data == false) {
+      if (email == "a-user@mail.com") {
         alert("User is a super admin");
       } else {
         this.loginService.retrieveUser().subscribe(data => {

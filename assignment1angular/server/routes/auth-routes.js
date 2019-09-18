@@ -25,16 +25,15 @@ module.exports = function(db, app) {
     // using mongodb
     userCollection.find({}).toArray((err, data) => {
       res.send(data);
-      console.log(data);
     });
 
-    fs.readFile("users.json", "utf-8", function(err, data) {
-      if (err) throw err;
+    // fs.readFile("users.json", "utf-8", function(err, data) {
+    //   if (err) throw err;
 
-      valid_user = JSON.parse(data);
+    //   valid_user = JSON.parse(data);
 
-      res.send(valid_user.valid_user_list);
-    });
+    //   res.send(valid_user.valid_user_list);
+    // });
   });
 
   // log in handler
@@ -106,116 +105,141 @@ module.exports = function(db, app) {
     customer.username = "";
     customer.isSuperAdmin = false;
     customer.isGroupAdmin = false;
-    customer.valid = false;
 
-    console.log(req.body.email);
+    userCollection
+      .find({
+        $or: [{ email: req.body.email }, { username: req.body.username }]
+      })
+      .count((err, count) => {
+        console.log(count);
+        if (count == 0) {
+          customer.email = req.body.email;
+          customer.username = req.body.username;
+          customer.password = req.body.password;
+          customer.isSuperAdmin = req.body.isSuperAdmin;
+          customer.isGroupAdmin = req.body.isGroupAdmin;
+          userCollection.insertOne(customer, (err, dbres) => {
+            if (err) throw err;
+          });
+          res.send(true);
+        } else {
+          res.send(false);
+        }
+      });
 
-    fs.readFile("users.json", "utf-8", function(err, data) {
-      if (err) throw err;
-      valid_user = JSON.parse(data);
+    // fs.readFile("users.json", "utf-8", function(err, data) {
+    //   if (err) throw err;
+    //   valid_user = JSON.parse(data);
 
-      // find whether email exist
-      var exist_useremail = valid_user.valid_user_list
-        .map(function(data) {
-          return data.email;
-        })
-        .indexOf(req.body.email);
+    //   // find whether email exist
+    //   var exist_useremail = valid_user.valid_user_list
+    //     .map(function(data) {
+    //       return data.email;
+    //     })
+    //     .indexOf(req.body.email);
 
-      // find whether username exist
-      var exist_username = valid_user.valid_user_list
-        .map(function(data) {
-          return data.username;
-        })
-        .indexOf(req.body.username);
+    //   // find whether username exist
+    //   var exist_username = valid_user.valid_user_list
+    //     .map(function(data) {
+    //       return data.username;
+    //     })
+    //     .indexOf(req.body.username);
 
-      // If both are -1 (means there is not available yet)
-      // Then create
-      if (exist_username == -1 && exist_useremail == -1) {
-        customer.valid = true;
-        customer.email = req.body.email;
-        customer.username = req.body.username;
-        customer.password = req.body.password;
-        customer.isSuperAdmin = req.body.isSuperAdmin;
-        customer.isGroupAdmin = req.body.isGroupAdmin;
+    //   // If both are -1 (means there is not available yet)
+    //   // Then create
+    //   if (exist_username == -1 && exist_useremail == -1) {
+    //     customer.valid = true;
+    //     customer.email = req.body.email;
+    //     customer.username = req.body.username;
+    //     customer.password = req.body.password;
+    //     customer.isSuperAdmin = req.body.isSuperAdmin;
+    //     customer.isGroupAdmin = req.body.isGroupAdmin;
 
-        // update json file
-        valid_user = JSON.parse(data);
-        valid_user.valid_user_list.push(customer);
-        console.log(valid_user);
-        json = JSON.stringify(valid_user);
-        fs.writeFile("users.json", json, "utf-8", function(err) {
-          if (err) throw err;
-        });
-      } else {
-        customer.valid = false;
-      }
-      res.send(customer);
-    });
-
-    // if username and email = -1
-    // it means there it no existence data
-    // then push new user to the array
+    //     // update json file
+    //     valid_user = JSON.parse(data);
+    //     valid_user.valid_user_list.push(customer);
+    //     console.log(valid_user);
+    //     json = JSON.stringify(valid_user);
+    //     fs.writeFile("users.json", json, "utf-8", function(err) {
+    //       if (err) throw err;
+    //     });
+    //   } else {
+    //     customer.valid = false;
+    //   }
+    //   res.send(customer);
+    // });
   });
 
   // remove user handler
   app.post("/api/delete", function(req, res) {
-    data = false;
     // console.log(server.valid_user.length);
 
-    fs.readFile("users.json", "utf-8", function(err, data) {
-      if (err) throw err;
-      console.log(data);
-      valid_user = JSON.parse(data);
-      console.log(valid_user);
-      if (req.body.email !== "a-user@mail.com") {
-        var user_index = valid_user.valid_user_list
-          .map(function(data) {
-            return data.email;
-          })
-          .indexOf(req.body.email);
-        console.log(user_index);
-        // delete valid_user[user_index];
-        valid_user.valid_user_list.splice(user_index, 1);
-        console.log(valid_user);
-        console.log(valid_user.valid_user_list.length);
-        data = true;
-      }
-
-      console.log(valid_user);
-      json = JSON.stringify(valid_user);
-      fs.writeFile("users.json", json, "utf-8", function(err) {
-        if (err) throw err;
-      });
+    userCollection.deleteOne({ email: req.body.email }, (err, docs) => {
+      res.send(true);
     });
-    res.send(data);
+
+    // fs.readFile("users.json", "utf-8", function(err, data) {
+    //   if (err) throw err;
+    //   console.log(data);
+    //   valid_user = JSON.parse(data);
+    //   console.log(valid_user);
+    //   if (req.body.email !== "a-user@mail.com") {
+    //     var user_index = valid_user.valid_user_list
+    //       .map(function(data) {
+    //         return data.email;
+    //       })
+    //       .indexOf(req.body.email);
+    //     console.log(user_index);
+    //     // delete valid_user[user_index];
+    //     valid_user.valid_user_list.splice(user_index, 1);
+    //     console.log(valid_user);
+    //     console.log(valid_user.valid_user_list.length);
+    //     data = true;
+    //   }
+
+    //   console.log(valid_user);
+    //   json = JSON.stringify(valid_user);
+    //   fs.writeFile("users.json", json, "utf-8", function(err) {
+    //     if (err) throw err;
+    //   });
+    // });
+    // res.send(data);
   });
 
   // Grand super admin role
   app.post("/grandsuper", function(req, res) {
-    fs.readFile("users.json", "utf-8", function(err, data) {
-      if (err) throw err;
-
-      valid_user = JSON.parse(data);
-
-      // Find user index
-      var user_index = valid_user.valid_user_list
-        .map(function(data) {
-          return data.email;
-        })
-        .indexOf(req.body.email);
-
-      // Check if user is already super admin
-      if (valid_user.valid_user_list[user_index].isSuperAdmin == true) {
-        res.send(false);
-      } else {
-        valid_user.valid_user_list[user_index].isSuperAdmin = true;
-        json = JSON.stringify(valid_user);
-        fs.writeFile("users.json", json, "utf-8", function(err) {
-          if (err) throw err;
-        });
+    userCollection.updateOne(
+      { email: req.body.email },
+      { $set: { isSuperAdmin: true } },
+      () => {
         res.send(true);
       }
-      console.log(valid_user.valid_user_list);
-    });
+    );
+
+    // fs.readFile("users.json", "utf-8", function(err, data) {
+    //   if (err) throw err;
+
+    //   valid_user = JSON.parse(data);
+
+    //   // Find user index
+    //   var user_index = valid_user.valid_user_list
+    //     .map(function(data) {
+    //       return data.email;
+    //     })
+    //     .indexOf(req.body.email);
+
+    //   // Check if user is already super admin
+    //   if (valid_user.valid_user_list[user_index].isSuperAdmin == true) {
+    //     res.send(false);
+    //   } else {
+    //     valid_user.valid_user_list[user_index].isSuperAdmin = true;
+    //     json = JSON.stringify(valid_user);
+    //     fs.writeFile("users.json", json, "utf-8", function(err) {
+    //       if (err) throw err;
+    //     });
+    //     res.send(true);
+    //   }
+    //   console.log(valid_user.valid_user_list);
+    // });
   });
 };

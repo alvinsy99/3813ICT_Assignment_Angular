@@ -31,7 +31,7 @@ export class LoginServiceService {
     isSuperAdmin: boolean,
     password: string
   ) {
-    return this.http.post<User>(this.backend + "/api/register", {
+    return this.http.post<any>(this.backend + "/api/register", {
       email: email,
       username: username,
       isGroupAdmin: isGroupAdmin,

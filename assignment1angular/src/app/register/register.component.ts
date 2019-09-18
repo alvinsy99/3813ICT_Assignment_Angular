@@ -26,13 +26,12 @@ export class RegisterComponent implements OnInit {
 
   // Create new account
   createAccount() {
-    console.log(this.emailRegister);
-    console.log(this.usernameRegister);
-    console.log(this.groupadmin);
-    console.log(this.superadmin);
-    console.log(this.passwordRegister);
-    if (this.emailRegister === "" && this.usernameRegister === "") {
-      alert("Email and User name cannot be blank");
+    if (
+      this.emailRegister === "" ||
+      this.usernameRegister === "" ||
+      this.passwordRegister === ""
+    ) {
+      alert("Email, Username and Password cannot be blank");
     } else {
       this.loginService
         .createAccountService(
@@ -43,13 +42,14 @@ export class RegisterComponent implements OnInit {
           this.passwordRegister
         )
         .subscribe(data => {
-          if (data.valid == false) {
+          console.log(data);
+          if (data == false) {
             alert("Email or Username is already taken");
             this.emailRegister = "";
             this.usernameRegister = "";
             this.passwordRegister = "";
           } else {
-            this.router.navigateByUrl("/account");
+            this.router.navigateByUrl("/remove_user");
             alert("User has been registered!!!");
           }
         });
