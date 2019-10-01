@@ -13,6 +13,8 @@ import { RemoveUserComponent } from "./remove-user/remove-user.component";
 import { GroupComponent } from "./group/group.component";
 import { ChannelDetailsComponent } from "./channel-details/channel-details.component";
 
+import { SocketService } from "../app/services/socket.service";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +32,7 @@ import { ChannelDetailsComponent } from "./channel-details/channel-details.compo
     HttpClientModule,
     CommonModule
   ],
-  providers: [],
+  providers: [SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

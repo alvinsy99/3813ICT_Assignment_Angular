@@ -79,6 +79,12 @@
               Add
             </button>
           </div>
+
+          <div id="chat_people">
+            <button (click)="leaveChannel()" class="btn btn-danger btn-sm">
+              Leave Channel
+            </button>
+          </div>
         </div>
       </div>
       <div class="mesgs">
@@ -92,14 +98,24 @@
             </div>
             <div class="received_msg">
               <div class="received_withd_msg">
-                <p>Test which is a new approach to have all solutions</p>
-                <span class="time_date"> 11:01 AM | June 9</span>
+                <!-- <p>Test which is a new approach to have all solutions</p>
+                <span class="time_date"> 11:01 AM | June 9</span> -->
+                <p>{{ noticemessage }}</p>
               </div>
             </div>
           </div>
-          <div class="outgoing_msg">
-            <div class="sent_msg"></div>
+
+          <div class="incoming_msg" *ngFor="let message of messages">
+            <div class="incoming_msg_img">
+              <img src="http://localhost:3000/images/{{ session.image }}" />
+            </div>
+            <div class="received_msg">
+              <div class="received_withd_msg">
+                <p>{{ message }}</p>
+              </div>
+            </div>
           </div>
+
           <div class="incoming_msg">
             <div class="incoming_msg_img">
               <img
@@ -114,8 +130,15 @@
         </div>
         <div class="type_msg">
           <div class="input_msg_write">
-            <input type="text" class="write_msg" placeholder="Type a message" />
-            <button class="msg_send_btn" type="button">
+            <input
+              type="text"
+              class="write_msg"
+              placeholder="Type a message"
+              name="messagecontent"
+              [(ngModel)]="messagecontent"
+              (keydown.enter)="chat()"
+            />
+            <button class="msg_send_btn" type="button" (click)="chat()">
               <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
             </button>
           </div>

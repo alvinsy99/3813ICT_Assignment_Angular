@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
+
 import { LoginServiceService } from "../services/login-service.service";
+import { SocketService } from "../services/socket.service";
 
 @Component({
   selector: "app-channel-details",
@@ -14,12 +16,19 @@ export class ChannelDetailsComponent implements OnInit {
   channel_name;
   channelMembers = [];
 
+  // Socket
+  messagecontent: string;
+  messages;
+
+  noticemessage: string;
+
   selectedUserChannel = "";
 
   constructor(
     private activatedroute: ActivatedRoute,
     private router: Router,
-    private loginService: LoginServiceService
+    private loginService: LoginServiceService,
+    private socketService: SocketService
   ) {}
 
   ngOnInit() {
@@ -27,6 +36,14 @@ export class ChannelDetailsComponent implements OnInit {
     this.activatedroute.params.subscribe((params: Params) => {
       this.group_name = params.gname;
       this.channel_name = params.cname; // (+) converts string 'id' to a number
+    });
+
+    // this.socketService.initSocket();
+    this.socketService.getMessage(m => {
+      this.messages = m;
+    });
+    this.socketService.joinedMessage(m => {
+      this.noticemessage = m;
     });
 
     // Retrieve a channel object
@@ -104,5 +121,26 @@ export class ChannelDetailsComponent implements OnInit {
           }
         });
     }
+  }
+
+  // SOCKET IO
+  chat() {
+    if (this.messagecontent) {
+      this.socketService.send(
+        this.group_name,
+        this.channel_name,
+        this.messagecontent,
+        this.session.username,
+        this.session.image
+      );
+      this.messagecontent = null;
+    }
+
+    console.log("ENTER");
+  }
+
+  leaveChannel() {
+    this.socketService.leaveChannel(this.group_name + this.channel_name);
+    this.router.navigateByUrl("/group");
   }
 }

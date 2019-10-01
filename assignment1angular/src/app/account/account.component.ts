@@ -14,14 +14,12 @@ export class AccountComponent implements OnInit {
   constructor(private loginService: LoginServiceService) {}
 
   ngOnInit() {
-    if (typeof Storage !== "undefined") {
+    if (typeof Storage !== undefined) {
       this.user = JSON.parse(sessionStorage.getItem("sessionUser"));
     }
 
     this.loginService.getGroups().subscribe(data => {
       this.groups = data;
     });
-
-    // window.location.reload();
   }
 }

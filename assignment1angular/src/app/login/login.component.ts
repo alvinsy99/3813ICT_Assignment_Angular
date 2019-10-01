@@ -12,20 +12,14 @@ export class LoginComponent implements OnInit {
   email = "";
   password = "";
   title = "Login";
-  data = JSON.parse(sessionStorage.getItem("sessionUser"));
+  // data = sessionStorage.getItem("sessionUser");
 
   constructor(
     private router: Router,
     private loginService: LoginServiceService
   ) {}
 
-  ngOnInit() {
-    if (this.data != null || this.data != undefined) {
-      this.router.navigateByUrl("/account");
-    } else {
-      this.router.navigateByUrl("/login");
-    }
-  }
+  ngOnInit() {}
 
   // Log In function called when the
   // 'Sign In' button is clicked
@@ -34,19 +28,18 @@ export class LoginComponent implements OnInit {
     console.log(this.password);
 
     this.loginService.logIn(this.email, this.password).subscribe(data => {
-      var dataJSON = JSON.stringify(data[0]);
       console.log(data[0]);
       // var dataEmailJSON = JSON.stringify(data[0]);
 
-      if ((data = true)) {
-        sessionStorage.setItem("sessionUser", dataJSON);
-        localStorage.setItem("localUser", dataJSON);
-        this.router.navigateByUrl("/account");
-        document.location.reload();
-      } else {
+      if (data == false) {
         alert("Invalid username or password");
         this.email = "";
         this.password = "";
+      } else {
+        const dataJSON = JSON.stringify(data[0]);
+        sessionStorage.setItem("sessionUser", dataJSON);
+        localStorage.setItem("localUser", dataJSON);
+        this.router.navigateByUrl("/account");
       }
     }),
       (error: HttpErrorResponse) => {

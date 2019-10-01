@@ -25,6 +25,7 @@ module.exports = function(db, app, ObjectID) {
 
   app.get("/groups", function(req, res) {
     groupCollection.find({}).toArray((err, data) => {
+      console.log(data[0]);
       res.send(data);
     });
   });
@@ -50,6 +51,7 @@ module.exports = function(db, app, ObjectID) {
       .find({ group_name: req.body.groupname })
       .limit(1)
       .toArray((err, docs) => {
+        console.log(docs);
         res.send(docs);
       });
   });
@@ -421,7 +423,7 @@ module.exports = function(db, app, ObjectID) {
     new_channel = {};
     new_channel.channel_name = req.body.channelname;
     new_channel.channel_members = [req.body.member];
-    new_channel.channel_message = {};
+    new_channel.channel_message = [];
     groupCollection
       .find({
         group_name: req.body.groupname,
@@ -436,6 +438,7 @@ module.exports = function(db, app, ObjectID) {
               $push: { channels: new_channel }
             },
             () => {
+              console.log(req.body.groupname.channels);
               res.send(true);
             }
           );

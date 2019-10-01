@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ɵConsole } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginServiceService } from "../services/login-service.service";
 import { saveAs } from "file-saver";
@@ -12,9 +12,12 @@ export class RegisterComponent implements OnInit {
   emailRegister = "";
   usernameRegister = "";
   passwordRegister = "";
+  imageRegister = "";
   groupadmin: boolean = false;
   superadmin: boolean = false;
 
+  selectedfile: File = null;
+  imagepath = "";
   private data;
 
   constructor(
@@ -24,8 +27,17 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {}
 
+  onFileSelected(event) {
+    console.log(event.target.files[0]);
+    this.selectedfile = <File>event.target.files[0];
+    console.log(this.selectedfile.name + " HRERE REJBJKA");
+    this.imageRegister = this.selectedfile.name;
+    console.log(this.imageRegister);
+  }
+
   // Create new account
   createAccount() {
+    console.log(this.imageRegister + " ajkbdjkabsjd");
     if (
       this.emailRegister === "" ||
       this.usernameRegister === "" ||
@@ -39,10 +51,10 @@ export class RegisterComponent implements OnInit {
           this.usernameRegister,
           this.groupadmin,
           this.superadmin,
-          this.passwordRegister
+          this.passwordRegister,
+          this.selectedfile.name
         )
         .subscribe(data => {
-          console.log(data);
           if (data == false) {
             alert("Email or Username is already taken");
             this.emailRegister = "";
@@ -58,5 +70,15 @@ export class RegisterComponent implements OnInit {
     // this.loginService.retrieveUser().subscribe(data => {
     //   saveAs(JSON.stringify(data), "valid_users.json");
     // });
+  }
+
+  imageUpload() {
+    const fd = new FormData();
+
+    fd.append("image", this.selectedfile, this.selectedfile.name);
+
+    this.loginService.imageupload(fd).subscribe(res => {
+      this.imagepath = res.data.filename;
+    });
   }
 }

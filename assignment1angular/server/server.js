@@ -3,16 +3,26 @@ var nodemon = require("nodemon");
 var app = express();
 var path = require("path");
 var cors = require("cors");
-var fs = require("fs");
-app.use(cors());
 
+var fs = require("fs");
+
+const formidable = require("formidable");
 var http = require("http").Server(app);
 const PORT = 3000;
 
+// SOCKET.IO
+var io = require("socket.io")(http);
+var sockets = require("./socket.js");
+//----------------------
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(cors());
 
+// Image Upload
 app.use(express.static(path.join(__dirname, "../dist/assignment1angular")));
+app.use("/images", express.static(path.join(__dirname, "./userimages")));
+// Image Upload
+// ------------------------------
 
 // var admin_user = {
 //   email: "a-user@mail.com",
@@ -28,36 +38,6 @@ app.use(express.static(path.join(__dirname, "../dist/assignment1angular")));
 // var userJSON = JSON.stringify(valid_user);
 
 // var groups = { group_list: [] };
-
-// users array
-// fs.writeFile("users.json", userJSON, "utf-8", function(err) {
-//   if (err) throw err;
-//   console.log(err);
-// });
-
-// fs.readFile("users.json", "utf-8", function(err, data) {
-//   if (err) throw err;
-//   console.log(data);
-//   valid_user = JSON.parse(data);
-//   // valid_user.valid_user_list.push(infor);
-
-//   console.log(valid_user);
-//   exports.valid_user = valid_user;
-// });
-
-// group array
-// fs.writeFile("groups.json", JSON.stringify(groups), "utf-8", function(err) {
-//   if (err) throw err;
-//   console.log(err);
-// });
-
-// fs.readFile("groups.json", "utf-8", function(err, data) {
-//   if (err) throw err;
-//   // console.log(groups);
-//   groups = JSON.parse(data);
-//   console.log(groups);
-//   // exports.groups = groups;
-// });
 
 // listen.js
 const listen = require("../server/routes/listen.js");
@@ -76,6 +56,7 @@ MongoClient.connect(
     }
 
     const db = client.db("assignment1database");
+    var groupCollection = db.collection("groups");
     // const usercollectionserver = client.collection("users");
     // usercollectionserver
     //   .find({ email: "a-user@mail.com" })
@@ -87,8 +68,9 @@ MongoClient.connect(
     //       });
     //     }
     //   });
-    require("./routes/auth-routes.js")(db, app);
+    require("./routes/auth-routes.js")(db, app, formidable);
     require("./routes/group-routes.js")(db, app, ObjectID);
+    sockets.connect(io, PORT, db);
   }
 );
 // routes

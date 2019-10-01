@@ -297,6 +297,9 @@
                               session.username
                             ) !== -1 || session.isSuperAdmin == true
                           "
+                          (click)="
+                            goToChannel(group.group_name, channel.channel_name)
+                          "
                         >
                           {{ channel.channel_name }}
                         </a>

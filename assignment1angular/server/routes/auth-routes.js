@@ -1,25 +1,26 @@
 var server = require("../server.js");
 var fs = require("fs");
-
-module.exports = function(db, app) {
+var imageName = "";
+module.exports = function(db, app, formidable) {
   // retrieve all users
   const userCollection = db.collection("users");
-  var admin_user = {
-    email: "a-user@mail.com",
-    username: "Super Admin A",
-    password: "123a",
-    isSuperAdmin: true,
-    isGroupAdmin: true,
-    valid: ""
-  };
-  userCollection.find({ email: "a-user@mail.com" }).count((err, count) => {
-    if (count == 0) {
-      userCollection.insertOne(admin_user, (err, dbres) => {
-        if (err) throw err;
-        console.log(dbres.insertCount);
-      });
-    }
-  });
+
+  // var admin_user = {
+  //   email: "a-user@mail.com",
+  //   username: "Super Admin A",
+  //   password: "123a",
+  //   isSuperAdmin: true,
+  //   isGroupAdmin: true,
+  //   valid: ""
+  // };
+  // userCollection.find({ email: "a-user@mail.com" }).count((err, count) => {
+  //   if (count == 0) {
+  //     userCollection.insertOne(admin_user, (err, dbres) => {
+  //       if (err) throw err;
+  //       console.log(dbres.insertCount);
+  //     });
+  //   }
+  // });
 
   app.get("/getusers", function(req, res) {
     // using mongodb
@@ -48,8 +49,6 @@ module.exports = function(db, app) {
     customer.isSuperAdmin = false;
     customer.isGroupAdmin = false;
     customer.valid = false;
-
-    console.log(req.body.email);
 
     userCollection
       .find({ email: req.body.email, password: req.body.password })
@@ -88,6 +87,24 @@ module.exports = function(db, app) {
     // });
   });
 
+  // image upload
+  app.post("/imageupload", function(req, res) {
+    this.imageName = "";
+    var form = new formidable.IncomingForm({ uploadDir: "./userimages" });
+    form.keepExtensions = true;
+
+    form.on("fileBegin", (name, file) => {
+      file.path = form.uploadDir + "/" + file.name;
+    });
+
+    form.on("file", (field, file) => {
+      res.send({ data: { filename: file.name } });
+      this.imageName = file.name;
+      console.log(this.imageName + " from imageupload");
+    });
+    form.parse(req);
+  });
+
   // user register handler
   app.post("/api/register", function(req, res) {
     if (!req.body) {
@@ -98,6 +115,7 @@ module.exports = function(db, app) {
     customer.email = "";
     customer.password = "";
     customer.username = "";
+    customer.image = "";
     customer.isSuperAdmin = false;
     customer.isGroupAdmin = false;
 
@@ -111,58 +129,18 @@ module.exports = function(db, app) {
           customer.email = req.body.email;
           customer.username = req.body.username;
           customer.password = req.body.password;
+          customer.image = req.body.imageregister;
           customer.isSuperAdmin = req.body.isSuperAdmin;
           customer.isGroupAdmin = req.body.isGroupAdmin;
           userCollection.insertOne(customer, (err, dbres) => {
             if (err) throw err;
           });
+
           res.send(true);
         } else {
           res.send(false);
         }
       });
-
-    // fs.readFile("users.json", "utf-8", function(err, data) {
-    //   if (err) throw err;
-    //   valid_user = JSON.parse(data);
-
-    //   // find whether email exist
-    //   var exist_useremail = valid_user.valid_user_list
-    //     .map(function(data) {
-    //       return data.email;
-    //     })
-    //     .indexOf(req.body.email);
-
-    //   // find whether username exist
-    //   var exist_username = valid_user.valid_user_list
-    //     .map(function(data) {
-    //       return data.username;
-    //     })
-    //     .indexOf(req.body.username);
-
-    //   // If both are -1 (means there is not available yet)
-    //   // Then create
-    //   if (exist_username == -1 && exist_useremail == -1) {
-    //     customer.valid = true;
-    //     customer.email = req.body.email;
-    //     customer.username = req.body.username;
-    //     customer.password = req.body.password;
-    //     customer.isSuperAdmin = req.body.isSuperAdmin;
-    //     customer.isGroupAdmin = req.body.isGroupAdmin;
-
-    //     // update json file
-    //     valid_user = JSON.parse(data);
-    //     valid_user.valid_user_list.push(customer);
-    //     console.log(valid_user);
-    //     json = JSON.stringify(valid_user);
-    //     fs.writeFile("users.json", json, "utf-8", function(err) {
-    //       if (err) throw err;
-    //     });
-    //   } else {
-    //     customer.valid = false;
-    //   }
-    //   res.send(customer);
-    // });
   });
 
   // remove user handler

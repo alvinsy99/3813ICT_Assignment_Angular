@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginServiceService } from "../services/login-service.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { SocketService } from "../services/socket.service";
 
 @Component({
   selector: "app-group",
@@ -26,7 +27,8 @@ export class GroupComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private loginService: LoginServiceService
+    private loginService: LoginServiceService,
+    private socketService: SocketService
   ) {}
 
   ngOnInit() {
@@ -41,7 +43,7 @@ export class GroupComponent implements OnInit {
       this.users = data;
     });
 
-    console.log(this.session);
+    this.socketService.initSocket();
   }
 
   // function is called when 'create group'
@@ -159,6 +161,9 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  goToChannel(groupname, channelname) {
+    this.socketService.joinChannel(groupname + channelname);
+  }
   // addUserToChannel(groupname: string) {
   //   console.log(groupname);
   //   console.log(this.selectedChannel);

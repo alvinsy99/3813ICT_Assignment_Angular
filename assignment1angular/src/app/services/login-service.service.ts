@@ -29,15 +29,22 @@ export class LoginServiceService {
     username: string,
     isGroupAdmin: boolean,
     isSuperAdmin: boolean,
-    password: string
+    password: string,
+    imageregister: string
   ) {
     return this.http.post<any>(this.backend + "/api/register", {
       email: email,
       username: username,
       isGroupAdmin: isGroupAdmin,
       isSuperAdmin: isSuperAdmin,
-      password: password
+      password: password,
+      imageregister: imageregister
     });
+  }
+
+  // Testing image upload route
+  imageupload(fd) {
+    return this.http.post<any>(this.backend + "/imageupload", fd);
   }
 
   // Retrieve all users

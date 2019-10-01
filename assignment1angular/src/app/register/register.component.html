@@ -34,6 +34,16 @@
         [(ngModel)]="passwordRegister"
         required
       />
+
+      <input
+        type="file"
+        id="file"
+        class="fadeIn third"
+        name="imageupload"
+        (change)="onFileSelected($event)"
+        required
+      />
+
       <p>
         Group Admin ?
         <select name="groupadmin" [(ngModel)]="groupadmin">
@@ -53,8 +63,11 @@
         type="submit"
         class="fadeIn fourth"
         value="Create Account"
+        (click)="imageUpload()"
         (click)="createAccount()"
       />
+
+      <button type="button" (click)="imageUpload()">Image</button>
     </form>
   </div>
 </div>
