@@ -44,7 +44,7 @@ describe("RegisterComponent", () => {
     expect(component.createAccount).toHaveBeenCalledTimes(0);
   });
 
-  it("form should be valid", () => {
+  it("form should be invalid 2", () => {
     spyOn(component, "createAccount");
 
     const button = fixture.debugElement.nativeElement.querySelector("button");
@@ -52,6 +52,9 @@ describe("RegisterComponent", () => {
     component.usernameRegister = "sample username";
     component.emailRegister = "sample@mail.com";
     component.passwordRegister = "123sample";
+    component.groupadmin = false;
+    component.superadmin = false;
+    component.imageRegister = "example.png";
 
     expect(component.createAccount).toHaveBeenCalledTimes(0);
   });
