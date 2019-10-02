@@ -1,16 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { RegisterComponent } from './register.component';
+import { RegisterComponent } from "./register.component";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
-describe('RegisterComponent', () => {
+describe("RegisterComponent", () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegisterComponent ]
-    })
-    .compileComponents();
+      declarations: [RegisterComponent],
+      imports: [
+        FormsModule,
+        BrowserModule,
+        RouterTestingModule,
+        HttpClientTestingModule
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +28,31 @@ describe('RegisterComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("form should be invalid", () => {
+    spyOn(component, "createAccount");
+
+    const button = fixture.debugElement.nativeElement.querySelector("button");
+
+    component.usernameRegister = "";
+    component.emailRegister = "";
+    component.passwordRegister = "";
+
+    expect(component.createAccount).toHaveBeenCalledTimes(0);
+  });
+
+  it("form should be valid", () => {
+    spyOn(component, "createAccount");
+
+    const button = fixture.debugElement.nativeElement.querySelector("button");
+
+    component.usernameRegister = "sample username";
+    component.emailRegister = "sample@mail.com";
+    component.passwordRegister = "123sample";
+
+    expect(component.createAccount).toHaveBeenCalledTimes(0);
   });
 });

@@ -9,6 +9,7 @@ module.exports = {
       // Receive message from user sending to server
       socket.on("message", data => {
         console.log(data);
+
         for (i = 0; i < socketRoom.length; i++) {
           if (socketRoom[i][0] == socket.id) {
             const id = i;
@@ -17,42 +18,44 @@ module.exports = {
             new_message.username = data.username;
             new_message.message = data.message;
             new_message.image = data.image;
+            new_message.sendingImage = data.sendingImage;
 
-            // groupCollection.updateOne(
-            //   {
-            //     group_name: data.group,
-            //     channels: { $elemMatch: { channel_name: data.channel } }
-            //   },
-            //   { $push: { "channels.$.channel_message": new_message } }
-            // );
-            console.log("done saving");
-
-            groupCollection
-              .find({
+            groupCollection.updateOne(
+              {
                 group_name: data.group,
                 channels: { $elemMatch: { channel_name: data.channel } }
-              })
-              .toArray((err, res) => {
-                var find_channel = res[0].channels
-                  .map(channel => {
-                    return channel.channel_name;
+              },
+              { $push: { "channels.$.channel_message": new_message } },
+              () => {
+                groupCollection
+                  .find({
+                    group_name: data.group,
+                    channels: { $elemMatch: { channel_name: data.channel } }
                   })
-                  .indexOf(data.channel);
-                for (
-                  i = 0;
-                  i < res[0].channels[find_channel].channel_message.length;
-                  i++
-                ) {
-                  message_list.push(
-                    res[0].channels[find_channel].channel_message[i].message
-                  );
+                  .toArray((err, res) => {
+                    var find_channel = res[0].channels
+                      .map(channel => {
+                        return channel.channel_name;
+                      })
+                      .indexOf(data.channel);
+                    // for (
+                    //   i = 0;
+                    //   i < res[0].channels[find_channel].channel_message.length;
+                    //   i++
+                    // ) {
+                    //   message_list.push(
+                    //     res[0].channels[find_channel].channel_message[i].message
+                    //   );
+                    // }
 
-                  console.log(
-                    res[0].channels[find_channel].channel_message[i].message
-                  );
-                }
-                io.to(socketRoom[id][1]).emit("message", message_list);
-              });
+                    io.to(socketRoom[id][1]).emit(
+                      "message",
+                      res[0].channels[find_channel].channel_message
+                    );
+                  });
+              }
+            );
+            console.log("done saving");
           }
         }
 

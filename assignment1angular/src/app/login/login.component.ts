@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Route, Router, Data } from "@angular/router";
 import { LoginServiceService } from "../services/login-service.service";
+import { FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-login",
@@ -14,6 +15,8 @@ export class LoginComponent implements OnInit {
   title = "Login";
   // data = sessionStorage.getItem("sessionUser");
 
+  // For karma testing
+  logInForm: FormGroup;
   constructor(
     private router: Router,
     private loginService: LoginServiceService

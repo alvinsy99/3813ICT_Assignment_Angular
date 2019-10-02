@@ -88,7 +88,7 @@
         </div>
       </div>
       <div class="mesgs">
-        <div class="msg_history">
+        <div class="msg_history" #scrollMe [scrollTop]="scrollMe.scrollHeight">
           <div class="incoming_msg">
             <div class="incoming_msg_img">
               <img
@@ -101,22 +101,49 @@
                 <!-- <p>Test which is a new approach to have all solutions</p>
                 <span class="time_date"> 11:01 AM | June 9</span> -->
                 <p>{{ noticemessage }}</p>
+                <span class="time_date">System Message</span>
+                <hr />
               </div>
             </div>
           </div>
 
           <div class="incoming_msg" *ngFor="let message of messages">
             <div class="incoming_msg_img">
-              <img src="http://localhost:3000/images/{{ session.image }}" />
+              <img src="http://localhost:3000/images/{{ message.image }}" />
             </div>
             <div class="received_msg">
-              <div class="received_withd_msg">
-                <p>{{ message }}</p>
+              <div
+                class="received_withd_msg"
+                *ngIf="message.message != undefined"
+              >
+                <p>{{ message.message }}</p>
+                <span class="time_date">{{ message.username }}</span>
+                <hr />
+              </div>
+
+              <div class="received_withd_msg" *ngIf="message.message == null">
+                <span class="time_date">{{ message.username }}</span>
+                <hr />
+              </div>
+
+              <div
+                class="received_withd_msg"
+                *ngIf="message.sendingImage != null"
+              >
+                <p>
+                  <img
+                    src="http://localhost:3000/images/{{
+                      message.sendingImage
+                    }}"
+                  />
+                </p>
+                <span class="time_date">{{ message.username }}</span>
+                <hr />
               </div>
             </div>
           </div>
 
-          <div class="incoming_msg">
+          <!-- <div class="incoming_msg">
             <div class="incoming_msg_img">
               <img
                 src="https://ptetutorials.com/images/user-profile.png"
@@ -126,7 +153,7 @@
             <div class="received_msg">
               <div class="received_withd_msg"></div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="type_msg">
           <div class="input_msg_write">
@@ -138,10 +165,29 @@
               [(ngModel)]="messagecontent"
               (keydown.enter)="chat()"
             />
+
             <button class="msg_send_btn" type="button" (click)="chat()">
               <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
             </button>
           </div>
+        </div>
+        <div class="type_msg" id="image">
+          <input
+            type="file"
+            id="file"
+            class="fadeIn third"
+            name="imageupload"
+            (change)="onFileSelected($event)"
+            required
+          />
+          <button
+            class="msg_send_btn"
+            type="button"
+            (click)="chat()"
+            id="photo"
+          >
+            <i class="fa fa-photo" aria-hidden="true"></i>
+          </button>
         </div>
       </div>
     </div>

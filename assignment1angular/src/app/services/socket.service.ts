@@ -20,14 +20,16 @@ export class SocketService {
     channel: string,
     message: string,
     username: string,
-    image: string
+    image: string,
+    sendingImage: string
   ): void {
     this.socket.emit("message", {
       group: group,
       channel: channel,
       message: message,
       username: username,
-      image: image
+      image: image,
+      sendingImage: sendingImage
     });
   }
 

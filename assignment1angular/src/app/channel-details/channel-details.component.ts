@@ -20,6 +20,12 @@ export class ChannelDetailsComponent implements OnInit {
   messagecontent: string;
   messages;
 
+  // Socket image sending
+  selectedfile: File = null;
+  imageRegister = null;
+  imagepath = "";
+  imageCheck;
+
   noticemessage: string;
 
   selectedUserChannel = "";
@@ -41,6 +47,7 @@ export class ChannelDetailsComponent implements OnInit {
     // this.socketService.initSocket();
     this.socketService.getMessage(m => {
       this.messages = m;
+      console.log(this.messages);
     });
     this.socketService.joinedMessage(m => {
       this.noticemessage = m;
@@ -123,18 +130,65 @@ export class ChannelDetailsComponent implements OnInit {
     }
   }
 
+  onFileSelected(event) {
+    this.selectedfile = <File>event.target.files[0];
+    console.log(this.selectedfile.name + " HRERE REJBJKA");
+    this.imageRegister = this.selectedfile.name;
+    console.log(this.imageRegister);
+
+    this.imageCheck = true;
+  }
+
+  // imageUpload() {
+  //   const fd = new FormData();
+
+  //   fd.append("image", this.selectedfile, this.selectedfile.name);
+
+  //   this.loginService.imageupload(fd).subscribe(res => {
+  //     this.imagepath = res.data.filename;
+  //   });
+  // }
+
   // SOCKET IO
   chat() {
-    if (this.messagecontent) {
+    console.log(this.imageRegister);
+    if (this.imageCheck) {
+      const fd = new FormData();
+
+      fd.append("image", this.selectedfile, this.imageRegister);
+
+      this.loginService.imageupload(fd).subscribe(res => {
+        // this.imagepath = res.data.filename;
+      });
+    }
+    if (this.messagecontent || this.imageRegister !== null) {
       this.socketService.send(
         this.group_name,
         this.channel_name,
         this.messagecontent,
         this.session.username,
-        this.session.image
+        this.session.image,
+        this.imageRegister
       );
       this.messagecontent = null;
+      this.selectedfile = null;
+      this.imageRegister = null;
+      this.imageCheck = false;
     }
+
+    // if (this.imageRegister && this.imageRegister === null) {
+    //   console.log("IMAGE IS NULL");
+    //   this.socketService.send(
+    //     this.group_name,
+    //     this.channel_name,
+    //     this.messagecontent,
+    //     this.session.username,
+    //     this.session.image,
+    //     ""
+    //   );
+
+    //   this.messagecontent = null;
+    // }
 
     console.log("ENTER");
   }

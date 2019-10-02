@@ -530,11 +530,17 @@ module.exports = function(db, app, ObjectID) {
       .toArray((err, data) => {
         console.log(data[0].channels);
 
-        var find_member_1 = data[0].channels.map(channel => {
-          return channel.channel_members;
-        });
+        var find_channel = data[0].channels
+          .map(channel => {
+            return channel.channel_name;
+          })
+          .indexOf(req.body.channelname);
 
-        var find_member = find_member_1[0].indexOf(req.body.member);
+        // console.log(find_member_1 + " find member 1");
+        var find_member = data[0].channels[
+          find_channel
+        ].channel_members.indexOf(req.body.member);
+        console.log(find_member);
         if (find_member == -1) {
           groupCollection.updateOne(
             {
