@@ -27,6 +27,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {}
 
+  // FIle input upload
   onFileSelected(event) {
     console.log(event.target.files[0]);
     this.selectedfile = <File>event.target.files[0];
@@ -72,6 +73,7 @@ export class RegisterComponent implements OnInit {
     // });
   }
 
+  // upload function
   imageUpload() {
     const fd = new FormData();
 

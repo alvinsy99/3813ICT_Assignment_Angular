@@ -11,10 +11,12 @@ export class SocketService {
   url = "http://localhost:3000";
   constructor() {}
 
+  // initialise of socket
   public initSocket(): void {
     this.socket = io(SERVER_URL);
   }
 
+  // message sending from angular side
   public send(
     group: string,
     channel: string,
@@ -33,6 +35,7 @@ export class SocketService {
     });
   }
 
+  // retrieving message from server
   public getMessage(next) {
     this.socket.on("message", message => next(message));
   }
@@ -45,9 +48,12 @@ export class SocketService {
     this.socket.emit("joinChannel", groupandchannel);
   }
 
+  // retrieve join message
   public joinedMessage(next) {
     this.socket.on("notice", result => next(result));
   }
+
+  // retrieve leave message
   public leaveChannel(groupandchannel) {
     this.socket.emit("leaveChannel", groupandchannel);
   }

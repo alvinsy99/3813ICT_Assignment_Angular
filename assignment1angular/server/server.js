@@ -56,7 +56,7 @@ MongoClient.connect(
     }
 
     const db = client.db("assignment1database");
-    var groupCollection = db.collection("groups");
+    // var groupCollection = db.collection("groups");
     // const usercollectionserver = client.collection("users");
     // usercollectionserver
     //   .find({ email: "a-user@mail.com" })

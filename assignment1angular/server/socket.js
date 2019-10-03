@@ -10,6 +10,7 @@ module.exports = {
       socket.on("message", data => {
         console.log(data);
 
+        // find the right socket room to send the message
         for (i = 0; i < socketRoom.length; i++) {
           if (socketRoom[i][0] == socket.id) {
             const id = i;
@@ -20,6 +21,7 @@ module.exports = {
             new_message.image = data.image;
             new_message.sendingImage = data.sendingImage;
 
+            // store the message in database
             groupCollection.updateOne(
               {
                 group_name: data.group,
@@ -48,6 +50,7 @@ module.exports = {
                     //   );
                     // }
 
+                    // emit the message to the angular side
                     io.to(socketRoom[id][1]).emit(
                       "message",
                       res[0].channels[find_channel].channel_message
@@ -62,6 +65,7 @@ module.exports = {
         // io.emit("message", message);
       });
 
+      // join a user in the channel
       socket.on("joinChannel", channel => {
         socket.join(channel, () => {
           socketRoom.push([socket.id, channel]);
@@ -76,6 +80,7 @@ module.exports = {
         });
       });
 
+      // disconnect a user from a room
       socket.on("leaveChannel", channel => {
         console.log(socketRoom);
         for (i = 0; i < socketRoom.length; i++) {

@@ -3,6 +3,7 @@ var fs = require("fs");
 var imageName = "";
 module.exports = function(db, app, formidable) {
   // retrieve all users
+  // db.collection("users").drop();
   const userCollection = db.collection("users");
 
   // var admin_user = {
@@ -11,6 +12,7 @@ module.exports = function(db, app, formidable) {
   //   password: "123a",
   //   isSuperAdmin: true,
   //   isGroupAdmin: true,
+  //   image: "example.png",
   //   valid: ""
   // };
   // userCollection.find({ email: "a-user@mail.com" }).count((err, count) => {

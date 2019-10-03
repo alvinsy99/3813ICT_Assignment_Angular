@@ -45,6 +45,7 @@ export class ChannelDetailsComponent implements OnInit {
     });
 
     // this.socketService.initSocket();
+    // retrieve new message and join message if a user has joined the channel
     this.socketService.getMessage(m => {
       this.messages = m;
       console.log(this.messages);
@@ -130,6 +131,7 @@ export class ChannelDetailsComponent implements OnInit {
     }
   }
 
+  // file selection in order to to upload the image
   onFileSelected(event) {
     this.selectedfile = <File>event.target.files[0];
     console.log(this.selectedfile.name + " HRERE REJBJKA");
@@ -150,6 +152,7 @@ export class ChannelDetailsComponent implements OnInit {
   // }
 
   // SOCKET IO
+  // sending the message to the socket server side
   chat() {
     console.log(this.imageRegister);
     if (this.imageCheck) {
@@ -193,6 +196,8 @@ export class ChannelDetailsComponent implements OnInit {
     console.log("ENTER");
   }
 
+  // SOCKET IO
+  // disconnect user from the  channel
   leaveChannel() {
     this.socketService.leaveChannel(this.group_name + this.channel_name);
     this.router.navigateByUrl("/group");
