@@ -4,7 +4,7 @@
 ## Version Control (Github)
 Github is one of the largest communities that provide software development version control using Git.
 This assignment applies git version control at the point where it has been implemented with creating new user, remove existing user. 
-Along with 4 components: account, login, register, remove-user and 1 service (login-service).
+Along with 5 components: account, login, register, remove-user, channel-details and 2 services (login-service and socket-service).
 The git repository contains README.md file and 1 folder which is angular project in order to prevent any naming convention error.
 From then, each small changes will be committed into the repo to keep track of the project.
 
@@ -26,7 +26,12 @@ From then, each small changes will be committed into the repo to keep track of t
                   channels : [
                                 { channel_name: "",
                                   channel_members: [],
-                                  channel_message: []
+                                  channel_message: [ { 
+                                                                    message: "",
+                                                                    username: "",
+                                                                    image: "",
+                                                                    sendingImage: ""
+                                                                    } ]
                              ]
                   ] }
                   
@@ -53,6 +58,10 @@ The front-end Angular application communicates with NodeJs server through servic
 + http://localhost:3000/channel (post): This route is to retrieve a specific channel with a group name and channel name will be passed into function in order to find the index and return a channel object
 + http://localhost:3000/addUserToChannel (post): This route is to add a non-existed user to a channel that is a group he/she is in. This function receives a group name, channel name and user name.
 + http://localhost:3000/removechannel (post): This route is to remove a channel which needs group name and channel name.
++ socket.on: This route is called when the message is received. The main function of this is to store the user message along with their name or an optional image that they have sent. This data is stored in an object that include their username, message, their image and an optional sending image through the message log.
++ socket.emit: This route is called in order to retrieve the message that has been sent after the message has been stored by using socket.on. This function will keep on looping in the component so that new message can be retrieve every time socket.on is called.
++ socket.join: This route is called in the group component when a user has entered a specific channel. The purpose of this route is to identify which channel the user is in therefore sending the corresponding message. This route is called when user has entered the channel in order to receive the message history.
++ socket.leave: This route is called in the chat channel component. The user will leave the channel by clicking the leave room. The socket.leave route is to indicate that user left the channel, which means they can no longer see the message that has been seen.
 
 ## Angular components architecture
 In the assignment, there are 5 components at the moment (app, login, account, register, remove-user) and 1 service (login-service) and 1 server (server.js)
@@ -64,11 +73,15 @@ In the assignment, there are 5 components at the moment (app, login, account, re
 + channel-details component: display a chatbox with messages and all the members inside the channel
 + login-service service: the middleware that passing parameters from a component to the NodeJs server side and allow a function to the re-usable.
 + server.js server: it contains the hard-code user array with 3 functions (logIn, createUser and removeUser) which will be called by the components.
++ socket.js: It contains all the route for using socket.io that has mainly 3 routes (socket.on, socket.emit, socket.join and socket.leave)
 
 ## Node server architecture
 At first, there will 2 files called 'users.json' and 'groups.json' which contains the data structure above with 1 super user from the start of the project.
 The file will be keep changing in the node server side. When a function is called, the correspond file will be read and transfer into object and assign to a variable and then at the end, that variable will be write back to the file. 
 I tries to avoid using a global variable (such as read file at first and assign it to a variable for global usage) because then I have to control 2 different object, 1 from the file and 1 from represent the file which will be very confusing and not effective
+
+The node server will be using mongodb as its main database which will be used to store the information from angular side. It is starting with 1 super user from the start of the project.
+The mongodb database will be keep updating in the node server side. When a function is called, the mongodb will be read and by using mongo query, the data is updated and some function will return an object that is a copy of mongo database.
 
 ## State changes
 **From client to server**: Mainly the variable is passed to the server are email. The way it happens is that in angular html, I defined [(ngModel]) in order to bind the variable with an client's input and then declare it in the component. With that, I will be able to use the variable in the component to subscribe to a service and pass to the server.js. 
