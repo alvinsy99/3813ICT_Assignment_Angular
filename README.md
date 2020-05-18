@@ -1,4 +1,4 @@
-# 3813ICT_Assignment_1
+# 3813ICT_Assignment_Angular
 
 ### My github link: https://github.com/alvinsy99/3813ICT_Assignment_1
 ## Version Control (Github)
